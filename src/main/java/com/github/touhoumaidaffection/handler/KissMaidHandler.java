@@ -9,7 +9,6 @@ import com.github.tartaricacid.touhoulittlemaid.entity.favorability.Type;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
@@ -102,11 +101,20 @@ public class KissMaidHandler {
 
         // Buff system: track kiss timestamps and check threshold
         if (ModConfig.BUFF_ENABLED.get()) {
-            handleBuffTrigger(player, maid, currentTick);
+            handleBuffTrigger(player, maid, currentTick, favLevel);
         }
     }
 
-    private static void handleBuffTrigger(Player player, EntityMaid maid, long currentTick) {
+    private static int getAmplifierForLevel(int level) {
+        return switch (level) {
+            case 1 -> ModConfig.BUFF_AMPLIFIER_LEVEL_1.get();
+            case 2 -> ModConfig.BUFF_AMPLIFIER_LEVEL_2.get();
+            case 3 -> ModConfig.BUFF_AMPLIFIER_LEVEL_3.get();
+            default -> ModConfig.BUFF_AMPLIFIER_LEVEL_0.get();
+        };
+    }
+
+    private static void handleBuffTrigger(Player player, EntityMaid maid, long currentTick, int favLevel) {
         UUID playerId = player.getUUID();
         int threshold = ModConfig.BUFF_KISS_THRESHOLD.get();
         long window = ModConfig.BUFF_KISS_WINDOW.get();
@@ -122,21 +130,13 @@ public class KissMaidHandler {
             timestamps.clear();
 
             int duration = ModConfig.BUFF_DURATION.get();
-            int amplifier = ModConfig.BUFF_AMPLIFIER.get();
+            int amplifier = getAmplifierForLevel(favLevel);
 
-            // Apply Maid's Prayer (our custom effect) to both
-            MobEffectInstance prayerEffect = new MobEffectInstance(
-                    ModEffects.MAIDS_PRAYER.getDelegate(), duration, amplifier, false, true, true);
-            player.addEffect(prayerEffect);
+            // Apply Maid's Prayer (custom effect with built-in regeneration) to both
+            player.addEffect(new MobEffectInstance(
+                    ModEffects.MAIDS_PRAYER.getDelegate(), duration, amplifier, false, true, true));
             maid.addEffect(new MobEffectInstance(
                     ModEffects.MAIDS_PRAYER.getDelegate(), duration, amplifier, false, true, true));
-
-            // Also apply Regeneration I to both
-            MobEffectInstance regenEffect = new MobEffectInstance(
-                    MobEffects.REGENERATION, duration, amplifier, false, true, true);
-            player.addEffect(regenEffect);
-            maid.addEffect(new MobEffectInstance(
-                    MobEffects.REGENERATION, duration, amplifier, false, true, true));
         }
     }
 }

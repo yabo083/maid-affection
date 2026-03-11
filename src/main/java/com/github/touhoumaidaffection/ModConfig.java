@@ -20,7 +20,10 @@ public class ModConfig {
     public static final ModConfigSpec.IntValue BUFF_KISS_THRESHOLD;
     public static final ModConfigSpec.IntValue BUFF_KISS_WINDOW;
     public static final ModConfigSpec.IntValue BUFF_DURATION;
-    public static final ModConfigSpec.IntValue BUFF_AMPLIFIER;
+    public static final ModConfigSpec.IntValue BUFF_AMPLIFIER_LEVEL_0;
+    public static final ModConfigSpec.IntValue BUFF_AMPLIFIER_LEVEL_1;
+    public static final ModConfigSpec.IntValue BUFF_AMPLIFIER_LEVEL_2;
+    public static final ModConfigSpec.IntValue BUFF_AMPLIFIER_LEVEL_3;
 
     // Particles
     public static final ModConfigSpec.IntValue PARTICLE_COUNT_MIN;
@@ -85,10 +88,27 @@ public class ModConfig {
                 .comment("Buff duration in ticks (default: 600 = 30 seconds)")
                 .defineInRange("durationTicks", 600, 20, 72000);
 
-        BUFF_AMPLIFIER = builder
-                .comment("Buff amplifier (0 = level I, 1 = level II, etc.) (default: 0)")
-                .defineInRange("amplifier", 0, 0, 9);
+        builder.comment("Regeneration amplifier per favorability level (0 = I, 1 = II, etc.)",
+                        "Higher levels can exceed vanilla limits — the power of love knows no bounds")
+               .push("amplifier");
 
+        BUFF_AMPLIFIER_LEVEL_0 = builder
+                .comment("Amplifier at favorability level 0 (default: 0 = Regen I)")
+                .defineInRange("level0", 0, 0, 255);
+
+        BUFF_AMPLIFIER_LEVEL_1 = builder
+                .comment("Amplifier at favorability level 1 (default: 1 = Regen II)")
+                .defineInRange("level1", 1, 0, 255);
+
+        BUFF_AMPLIFIER_LEVEL_2 = builder
+                .comment("Amplifier at favorability level 2 (default: 2 = Regen III, beyond vanilla)")
+                .defineInRange("level2", 2, 0, 255);
+
+        BUFF_AMPLIFIER_LEVEL_3 = builder
+                .comment("Amplifier at favorability level 3 (default: 4 = Regen V, far beyond vanilla)")
+                .defineInRange("level3", 4, 0, 255);
+
+        builder.pop();
         builder.pop();
 
         builder.comment("Particle settings")
