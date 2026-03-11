@@ -3,6 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'net.neoforged.moddev' version '2.0.95'
+    id 'com.modrinth.minotaur' version '2.+'
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -108,3 +109,21 @@ idea {
 java {
     withSourcesJar()
 }
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+    projectId = project.modrinth_project_id
+    versionNumber = project.mod_version
+    versionName = "v${project.mod_version}"
+    versionType = "release"
+    uploadFile = jar
+    gameVersions = [project.minecraft_version]
+    loaders = ["neoforge"]
+    changelog = System.getenv("CHANGELOG") ?: "See https://github.com/yabo083/maid-affection/releases/tag/v${project.mod_version}"
+    syncBodyFrom = rootProject.file("README.md").text
+    dependencies {
+        required.project "touhou-little-maid"
+    }
+}
+
+tasks.modrinth.dependsOn(tasks.modrinthSyncBody)

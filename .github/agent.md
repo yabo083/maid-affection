@@ -88,9 +88,21 @@
     git push origin "v<版本号>"
     ```
     推送 tag 会自动触发 `.github/workflows/build.yml` 中的 release job，
-    CI 会构建并创建 GitHub Release（附带 jar）。
+    CI 会构建并创建 GitHub Release（附带 jar），并自动发布到 Modrinth。
 
-18. **验证 CI**：推送后提醒用户检查 GitHub Actions 是否成功
+18. **验证 CI**：推送后提醒用户检查：
+    - GitHub Actions 是否成功
+    - Modrinth 版本是否已发布（需确保 `MODRINTH_TOKEN` secret 已配置）
+
+### Modrinth 发布配置
+
+- 使用 [Minotaur](https://github.com/modrinth/minotaur) Gradle 插件（`com.modrinth.minotaur` v2.+）
+- `modrinth_project_id` 在 `gradle.properties` 中配置
+- Token 通过 GitHub Secrets 的 `MODRINTH_TOKEN` 环境变量传入
+- CI release job 中在 GitHub Release 之后自动执行 `./gradlew modrinth`
+- `syncBodyFrom` 自动将 README.md 同步为 Modrinth 项目描述
+- 依赖声明：`required.project "touhou-little-maid"`
+- Modrinth **不支持 OIDC**，只能用 PAT
 
 ---
 

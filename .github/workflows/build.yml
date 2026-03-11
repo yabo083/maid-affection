@@ -67,3 +67,11 @@ jobs:
           generate_release_notes: true
           draft: false
           prerelease: false
+
+      - name: Publish to Modrinth
+        if: env.MODRINTH_TOKEN != ''
+        run: |
+          chmod +x ./gradlew
+          ./gradlew modrinth
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
