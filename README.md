@@ -47,29 +47,6 @@ Kiss **3 times within 10 seconds** to trigger the **Maid's Prayer** buff on both
   - Level 3: Regen V *(the power of love!)*
 - Duration: 30 seconds (configurable)
 
-### 🔗 Life Link (生命连锁)
-
-Use a **Chain** item to forge a soul contract with your maid. The chain becomes a carrier for a virtual HP pool (Soul Shield) that absorbs damage for you.
-
-**How to Use:**
-
-1. **Bind**: Hold a Chain in your main hand → **Sneak + Right-click** a maid to bind her
-2. **Unbind**: Same operation on an already-bound maid to release her
-3. **Passive Protection**: Keep the bound chain anywhere in your inventory — when you take damage, the chain's energy absorbs a portion
-4. **View Red Thread**: Hold the bound chain in either hand to see the crimson thread connecting you and your maid
-
-**Mechanics:**
-
-| Mechanic | Details |
-|---|---|
-| **Virtual HP Pool** | Energy = (favorability level + 1) × 5.0 per bound maid |
-| **Damage Share** | Level 0: 15% → Level 1: 25% → Level 2: 35% → Level 3: 50% |
-| **Energy Regen** | 0.5 energy/second |
-| **Max Binds** | 1 maid per chain (configurable up to 10) |
-| **Maid Safety** | Virtual HP only — your maid takes **zero** actual damage |
-| **Visual** | Red particle line when holding chain (gray when energy depleted) |
-| **Indicator** | "Life Link" MobEffect icon shown when shield is active |
-
 ### 🧲 Offhand Maid Attraction
 
 In vanilla TouhouLittleMaid, only **main hand** cake attracts maids. This mod extends that behavior via Mixin:
@@ -94,7 +71,6 @@ All values are tunable in `config/touhou_maid_affection-common.toml`:
 - Kiss cooldown per favorability level
 - Favorability points and cooldown
 - Maid's Prayer thresholds, duration, regen amplifiers
-- Life Link energy coefficient, share ratios, regen rate, max binds
 - FOV zoom strength and timing
 - Particle counts
 
@@ -122,9 +98,7 @@ Output jar at `build/libs/touhou-maid-affection-x.x.x.jar`.
 - **Networking**: Custom `KissMaidPayload` packet (Server → Client) for particle sync
 - **Compatibility**: Soft-detects CarryOn via `ModList.isLoaded()`, zero hard dependencies
 - **Favorability**: Uses TLM's built-in `FavorabilityManager` + custom `Type("Kiss", 3, 600)`
-- **Data Storage**: Life Link data stored as `DataComponentType` on chain ItemStacks (persists in inventory)
 - **Client Effects**: FOV zoom via `ComputeFovModifierEvent` + camera angles via `ViewportEvent.ComputeCameraAngles`
-- **Damage System**: Life Link intercepts `LivingIncomingDamageEvent` and reduces damage before it's applied
 
 ## 📄 License
 
