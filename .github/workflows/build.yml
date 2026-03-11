@@ -34,8 +34,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: maid-affection
-          path: build/libs/maid-affection-*.jar
+          name: touhou-maid-affection
+          path: build/libs/touhou-maid-affection-*.jar
           if-no-files-found: error
 
   release:
@@ -63,7 +63,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          files: build/libs/maid-affection-*.jar
+          files: build/libs/touhou-maid-affection-*.jar
           generate_release_notes: true
           draft: false
           prerelease: false
