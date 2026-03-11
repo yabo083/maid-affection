@@ -2,7 +2,7 @@
   <img src="image/README/1773209564540.png" alt="亲亲你的女仆！" width="600"/>
 </p>
 
-<h1 align="center">💋 Maid Affection — 女仆亲亲</h1>
+<h1 align="center">💋 Touhou Maid: Affection — 女仆亲亲</h1>
 
 <p align="center">
   <b>亲亲你的女仆吧，她值得。</b>

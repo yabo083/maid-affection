@@ -32,3 +32,4 @@ desktop.ini
 
 # Source audio files (only OGG needed)
 src/main/resources/kissSound/
+.github/agent.md

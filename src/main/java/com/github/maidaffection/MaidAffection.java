@@ -26,7 +26,7 @@ public class MaidAffection {
         // Register game event handlers on NeoForge bus
         NeoForge.EVENT_BUS.register(KissMaidHandler.class);
 
-        LOGGER.info("Maid Affection loaded! Now you can kiss your maid~");
+        LOGGER.info("Touhou Maid: Affection loaded! Now you can kiss your maid~");
     }
 
     private void registerPayloads(final RegisterPayloadHandlersEvent event) {

@@ -1,4 +1,4 @@
-# Maid Affection — 开发工作流规范
+# Touhou Maid: Affection — 开发工作流规范
 
 > 本文档是 AI 编码 Agent 在本项目中的行为规范。
 > 所有对本仓库的开发操作（写代码、构建、发布）都应遵循以下流程。
