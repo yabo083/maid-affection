@@ -1,32 +1,26 @@
 package com.github.touhoumaidaffection.handler;
 
+import com.github.touhoumaidaffection.ModConfig;
+import com.github.touhoumaidaffection.ModEffects;
 import com.github.touhoumaidaffection.ModSounds;
 import com.github.touhoumaidaffection.network.KissMaidPayload;
 import com.github.tartaricacid.touhoulittlemaid.api.event.InteractMaidEvent;
 import com.github.tartaricacid.touhoulittlemaid.entity.favorability.Type;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class KissMaidHandler {
-    /**
-     * Favorability type for kissing: +3 points, 600 tick (30s) cooldown for favorability gain
-     */
-    public static final Type KISS_FAVORABILITY = new Type("Kiss", 3, 600);
-
-    /**
-     * Interaction cooldown to prevent particle spam: 40 ticks (2 seconds)
-     */
-    private static final long KISS_COOLDOWN_TICKS = 40L;
 
     private static final Map<UUID, Long> COOLDOWNS = new HashMap<>();
+    private static final Map<UUID, List<Long>> KISS_TIMESTAMPS = new HashMap<>();
 
     private static Boolean carryOnLoaded = null;
 
@@ -35,6 +29,15 @@ public class KissMaidHandler {
             carryOnLoaded = ModList.get().isLoaded("carryon");
         }
         return carryOnLoaded;
+    }
+
+    private static long getCooldownForLevel(int level) {
+        return switch (level) {
+            case 1 -> ModConfig.COOLDOWN_LEVEL_1.get();
+            case 2 -> ModConfig.COOLDOWN_LEVEL_2.get();
+            case 3 -> ModConfig.COOLDOWN_LEVEL_3.get();
+            default -> ModConfig.COOLDOWN_LEVEL_0.get();
+        };
     }
 
     @SubscribeEvent
@@ -59,10 +62,13 @@ public class KissMaidHandler {
             return;
         }
 
-        // Interaction cooldown check
+        // Tiered cooldown check based on maid's favorability level
         long currentTick = player.level().getGameTime();
+        int favLevel = maid.getFavorabilityManager().getLevel();
+        long cooldown = getCooldownForLevel(favLevel);
+
         Long lastKiss = COOLDOWNS.get(player.getUUID());
-        if (lastKiss != null && (currentTick - lastKiss) < KISS_COOLDOWN_TICKS) {
+        if (cooldown > 0 && lastKiss != null && (currentTick - lastKiss) < cooldown) {
             event.setCanceled(true);
             return;
         }
@@ -73,8 +79,11 @@ public class KissMaidHandler {
         // Record cooldown
         COOLDOWNS.put(player.getUUID(), currentTick);
 
-        // Apply favorability (has its own internal cooldown of 600 ticks)
-        maid.getFavorabilityManager().apply(KISS_FAVORABILITY);
+        // Apply favorability (dynamic Type with configured values)
+        int favPoints = ModConfig.FAVORABILITY_POINTS.get();
+        int favCooldown = ModConfig.FAVORABILITY_COOLDOWN.get();
+        Type kissType = new Type("Kiss", favPoints, favCooldown);
+        maid.getFavorabilityManager().apply(kissType);
 
         // Make the maid look at the player
         maid.getLookControl().setLookAt(player, 30.0F, 30.0F);
@@ -90,5 +99,44 @@ public class KissMaidHandler {
         // Broadcast particle packet to all tracking clients
         KissMaidPayload payload = new KissMaidPayload(maid.getId(), player.getId());
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(maid, payload);
+
+        // Buff system: track kiss timestamps and check threshold
+        if (ModConfig.BUFF_ENABLED.get()) {
+            handleBuffTrigger(player, maid, currentTick);
+        }
+    }
+
+    private static void handleBuffTrigger(Player player, EntityMaid maid, long currentTick) {
+        UUID playerId = player.getUUID();
+        int threshold = ModConfig.BUFF_KISS_THRESHOLD.get();
+        long window = ModConfig.BUFF_KISS_WINDOW.get();
+
+        List<Long> timestamps = KISS_TIMESTAMPS.computeIfAbsent(playerId, k -> new ArrayList<>());
+        timestamps.add(currentTick);
+
+        // Remove timestamps outside the window
+        timestamps.removeIf(t -> (currentTick - t) > window);
+
+        if (timestamps.size() >= threshold) {
+            // Clear timestamps to reset counter
+            timestamps.clear();
+
+            int duration = ModConfig.BUFF_DURATION.get();
+            int amplifier = ModConfig.BUFF_AMPLIFIER.get();
+
+            // Apply Maid's Prayer (our custom effect) to both
+            MobEffectInstance prayerEffect = new MobEffectInstance(
+                    ModEffects.MAIDS_PRAYER.getDelegate(), duration, amplifier, false, true, true);
+            player.addEffect(prayerEffect);
+            maid.addEffect(new MobEffectInstance(
+                    ModEffects.MAIDS_PRAYER.getDelegate(), duration, amplifier, false, true, true));
+
+            // Also apply Regeneration I to both
+            MobEffectInstance regenEffect = new MobEffectInstance(
+                    MobEffects.REGENERATION, duration, amplifier, false, true, true);
+            player.addEffect(regenEffect);
+            maid.addEffect(new MobEffectInstance(
+                    MobEffects.REGENERATION, duration, amplifier, false, true, true));
+        }
     }
 }

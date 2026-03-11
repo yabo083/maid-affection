@@ -30,7 +30,9 @@
 | 🔊 **Kiss Sound Effects** | Plays crisp kissing sounds (7 random variants) |
 | 📈 **Favorability Boost** | Each kiss grants **+3 favorability** (30s cooldown) |
 | 👀 **Maid Gaze** | Your maid turns to look at you during the kiss |
-| ⏱️ **Anti-Spam** | 2-second interaction cooldown to prevent particle spam |
+| ⏱️ **Tiered Cooldown** | Cooldown decreases as maid favorability rises: 5s → 3s → 1s → 0s |
+| 🙏 **Maid's Prayer Buff** | Kiss 3 times within 10s to grant Regeneration I (30s) to both you and your maid |
+| ⚙️ **Fully Configurable** | All values tunable via `config/touhou_maid_affection-common.toml` |
 | 📦 **CarryOn Compatible** | Auto-detects CarryOn mod and avoids interaction conflicts |
 | 🧲 **Offhand Attraction** | Holding temptation items (e.g. cake) in your offhand also attracts maids |
 

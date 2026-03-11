@@ -1,5 +1,6 @@
 package com.github.touhoumaidaffection.client;
 
+import com.github.touhoumaidaffection.ModConfig;
 import com.github.touhoumaidaffection.network.KissMaidPayload;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -23,8 +24,7 @@ public class KissClientHandler {
             Vec3 maidEye = maid.getEyePosition();
             Vec3 midpoint = playerEye.add(maidEye).scale(0.5).add(0, -0.3, 0);
 
-            // Spawn 3-6 heart particles with random offset
-            int count = 3 + level.random.nextInt(4);
+            int count = ModConfig.PARTICLE_COUNT_MIN.get() + level.random.nextInt(ModConfig.PARTICLE_COUNT_EXTRA.get() + 1);
             for (int i = 0; i < count; i++) {
                 double offsetX = (level.random.nextDouble() - 0.5) * 0.5;
                 double offsetY = level.random.nextDouble() * 0.3;

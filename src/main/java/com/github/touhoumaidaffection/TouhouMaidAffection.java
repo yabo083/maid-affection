@@ -4,6 +4,7 @@ import com.github.touhoumaidaffection.client.KissClientHandler;
 import com.github.touhoumaidaffection.handler.KissMaidHandler;
 import com.github.touhoumaidaffection.network.KissMaidPayload;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -16,9 +17,15 @@ public class TouhouMaidAffection {
     public static final String MOD_ID = "touhou_maid_affection";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-    public TouhouMaidAffection(IEventBus modEventBus) {
+    public TouhouMaidAffection(IEventBus modEventBus, ModContainer modContainer) {
+        // Register config
+        modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.COMMON, ModConfig.SPEC);
+
         // Register sound events
         ModSounds.SOUNDS.register(modEventBus);
+
+        // Register mob effects
+        ModEffects.MOB_EFFECTS.register(modEventBus);
 
         // Register network packets on mod bus
         modEventBus.addListener(this::registerPayloads);

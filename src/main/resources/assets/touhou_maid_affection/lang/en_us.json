@@ -4,5 +4,6 @@
   "tips.touhou_maid_affection.kiss": "Sneak + empty hand right-click maid to kiss",
   "tips.touhou_maid_affection.kiss_carryon": "CarryOn detected: Sneak + empty main hand + item in offhand right-click maid to kiss",
   "tips.touhou_maid_affection.offhand_tempt": "Holding temptation items (default: cake) in offhand also attracts maids",
-  "subtitles.touhou_maid_affection.kiss": "Kiss"
+  "subtitles.touhou_maid_affection.kiss": "Kiss",
+  "effect.touhou_maid_affection.maids_prayer": "Maid's Prayer"
 }
