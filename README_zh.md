@@ -81,7 +81,7 @@ cd maid-affection
 
 ## 📋 技术细节
 
-- **Mod ID**: `maid_affection`
+- **Mod ID**: `touhou_maid_affection`
 - **API**: 使用 TouhouLittleMaid 提供的 `InteractMaidEvent` 事件 API
 - **网络**: 自定义 `KissMaidPayload` 包（Server → Client）用于同步粒子效果
 - **兼容性**: 通过 `ModList.isLoaded()` 软检测 CarryOn，零硬依赖

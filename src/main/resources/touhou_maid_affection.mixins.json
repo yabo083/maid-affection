@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "com.github.maidaffection.mixin",
+  "package": "com.github.touhoumaidaffection.mixin",
   "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
   "mixins": [

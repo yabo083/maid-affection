@@ -1,0 +1,14 @@
+{
+  "touhou_maid_affection.kiss": {
+    "subtitle": "subtitles.touhou_maid_affection.kiss",
+    "sounds": [
+      "touhou_maid_affection:kiss/kiss1",
+      "touhou_maid_affection:kiss/kiss2",
+      "touhou_maid_affection:kiss/kiss3",
+      "touhou_maid_affection:kiss/kiss4",
+      "touhou_maid_affection:kiss/kiss5",
+      "touhou_maid_affection:kiss/kiss6",
+      "touhou_maid_affection:kiss/kiss7"
+    ]
+  }
+}

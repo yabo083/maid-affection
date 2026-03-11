@@ -3,7 +3,7 @@ loaderVersion = "${loader_version_range}"
 license = "${mod_license}"
 
 [[mixins]]
-config = "maid_affection.mixins.json"
+config = "touhou_maid_affection.mixins.json"
 
 [[mods]]
 modId = "${mod_id}"

@@ -81,7 +81,7 @@ Output jar at `build/libs/maid-affection-x.x.x.jar`.
 
 ## 📋 Technical Details
 
-- **Mod ID**: `maid_affection`
+- **Mod ID**: `touhou_maid_affection`
 - **API**: Uses TouhouLittleMaid's `InteractMaidEvent` event API
 - **Networking**: Custom `KissMaidPayload` packet (Server → Client) for particle sync
 - **Compatibility**: Soft-detects CarryOn via `ModList.isLoaded()`, zero hard dependencies

@@ -1,8 +1,8 @@
-package com.github.maidaffection;
+package com.github.touhoumaidaffection;
 
-import com.github.maidaffection.client.KissClientHandler;
-import com.github.maidaffection.handler.KissMaidHandler;
-import com.github.maidaffection.network.KissMaidPayload;
+import com.github.touhoumaidaffection.client.KissClientHandler;
+import com.github.touhoumaidaffection.handler.KissMaidHandler;
+import com.github.touhoumaidaffection.network.KissMaidPayload;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
@@ -11,12 +11,12 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Mod(MaidAffection.MOD_ID)
-public class MaidAffection {
-    public static final String MOD_ID = "maid_affection";
+@Mod(TouhouMaidAffection.MOD_ID)
+public class TouhouMaidAffection {
+    public static final String MOD_ID = "touhou_maid_affection";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-    public MaidAffection(IEventBus modEventBus) {
+    public TouhouMaidAffection(IEventBus modEventBus) {
         // Register sound events
         ModSounds.SOUNDS.register(modEventBus);
 

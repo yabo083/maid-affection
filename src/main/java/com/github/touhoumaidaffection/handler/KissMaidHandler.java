@@ -1,7 +1,7 @@
-package com.github.maidaffection.handler;
+package com.github.touhoumaidaffection.handler;
 
-import com.github.maidaffection.ModSounds;
-import com.github.maidaffection.network.KissMaidPayload;
+import com.github.touhoumaidaffection.ModSounds;
+import com.github.touhoumaidaffection.network.KissMaidPayload;
 import com.github.tartaricacid.touhoulittlemaid.api.event.InteractMaidEvent;
 import com.github.tartaricacid.touhoulittlemaid.entity.favorability.Type;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;

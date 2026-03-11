@@ -1,6 +1,6 @@
-package com.github.maidaffection.client;
+package com.github.touhoumaidaffection.client;
 
-import com.github.maidaffection.network.KissMaidPayload;
+import com.github.touhoumaidaffection.network.KissMaidPayload;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.particles.ParticleTypes;

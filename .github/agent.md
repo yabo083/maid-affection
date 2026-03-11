@@ -9,7 +9,7 @@
 
 | 项 | 值 |
 |---|---|
-| **Mod ID** | `maid_affection` |
+| **Mod ID** | `touhou_maid_affection` |
 | **加载器** | NeoForge 21.1.x（`net.neoforged.moddev` 2.0.95） |
 | **Minecraft** | 1.21.1 |
 | **Java** | 21 |
@@ -38,14 +38,14 @@
 4. **先读后改**：修改任何文件前，必须先 `read_file` 获取当前内容
 5. **最小改动**：只改需要改的，不做"顺便优化"
 6. **Mixin 规范**：
-   - Mixin 类放 `com.github.maidaffection.mixin` 包
-   - Mixin 配置文件：`src/main/resources/maid_affection.mixins.json`
+   - Mixin 类放 `com.github.touhoumaidaffection.mixin` 包
+   - Mixin 配置文件：`src/main/resources/touhou_maid_affection.mixins.json`
    - 在 `neoforge.mods.toml` 中用 `[[mixins]]` 段注册
    - 目标是 mod 类（非 Minecraft 原版）时，设 `remap = false`
 7. **音效规范**：
    - 源文件（wav 等）放 `src/main/resources/kissSound/`，已被 `.gitignore` 排除
-   - 转换后的 OGG 放 `assets/maid_affection/sounds/` 下对应子目录
-   - 在 `assets/maid_affection/sounds.json` 中声明
+   - 转换后的 OGG 放 `assets/touhou_maid_affection/sounds/` 下对应子目录
+   - 在 `assets/touhou_maid_affection/sounds.json` 中声明
    - 用 `DeferredRegister<SoundEvent>` 在 `ModSounds.java` 中注册
 8. **网络包规范**：
    - 实现 `CustomPacketPayload`
@@ -68,9 +68,10 @@
 
 13. **更新版本号**：修改 `gradle.properties` 中的 `mod_version`
     - 版本号遵循语义化版本：`MAJOR.MINOR.PATCH`
-    - 新功能 → MINOR +1
-    - Bug 修复 → PATCH +1
-    - 破坏性变更 → MAJOR +1
+    - 新功能（新交互、新 Mixin、新音效等用户可感知的变化）→ MINOR +1
+    - 小修改（重命名、文档、CI、构建配置、元数据等非功能性变更）→ PATCH +1
+    - 破坏性变更（mod ID 变更、删除功能、不向后兼容）→ MAJOR +1
+    - **禁止频繁升 MINOR**：仅文档/配置/重命名等修改绝不升 MINOR，一律升 PATCH
 14. **重新构建**：版本号改后必须重新 `.\gradlew.bat build`
 15. **提交代码**：
     ```
@@ -100,7 +101,7 @@
 - `modrinth_project_id` 在 `gradle.properties` 中配置
 - Token 通过 GitHub Secrets 的 `MODRINTH_TOKEN` 环境变量传入
 - CI release job 中在 GitHub Release 之后自动执行 `./gradlew modrinth`
-- `syncBodyFrom` 自动将 README.md 同步为 Modrinth 项目描述
+- `syncBodyFrom` 自动将 README_zh.md 同步为 Modrinth 项目描述
 - 依赖声明：`required.project "touhou-little-maid"`
 - Modrinth **不支持 OIDC**，只能用 PAT
 
@@ -109,17 +110,18 @@
 ## 📁 项目结构
 
 ```
-maid-affection/
+touhou-maid-affection/
 ├── .github/workflows/build.yml    # CI/CD：push 构建 + tag 发布
 ├── .gitignore
 ├── LICENSE
-├── README.md
-├── build.gradle                    # NeoForge moddev 构建脚本
+├── README.md                       # 英文 README（GitHub 默认展示）
+├── README_zh.md                    # 中文 README（同步到 Modrinth）
+├── build.gradle                    # NeoForge moddev + Minotaur 构建脚本
 ├── gradle.properties               # 版本号、mod 信息、依赖版本
 ├── settings.gradle
 ├── gradle/wrapper/                 # Gradle Wrapper（必须提交 jar）
-├── src/main/java/com/github/maidaffection/
-│   ├── MaidAffection.java          # @Mod 主类，注册事件和网络包
+├── src/main/java/com/github/touhoumaidaffection/
+│   ├── TouhouMaidAffection.java    # @Mod 主类，注册事件和网络包
 │   ├── ModSounds.java              # DeferredRegister<SoundEvent>
 │   ├── client/
 │   │   └── KissClientHandler.java  # 客户端粒子渲染
@@ -132,9 +134,9 @@ maid-affection/
 │       └── KissMaidPayload.java    # Server→Client 网络包
 ├── src/main/resources/
 │   ├── META-INF/neoforge.mods.toml # 模组元数据 + Mixin 注册
-│   ├── maid_affection.mixins.json  # Mixin 配置
+│   ├── touhou_maid_affection.mixins.json  # Mixin 配置
 │   ├── pack.mcmeta
-│   └── assets/maid_affection/
+│   └── assets/touhou_maid_affection/
 │       ├── lang/en_us.json
 │       ├── lang/zh_cn.json
 │       ├── sounds.json             # 音效声明
@@ -199,3 +201,5 @@ maid-affection/
 | v1.0.0 | The Maiden's Awakening | 初始发布：亲吻互动 + 粒子 + 好感度 |
 | v1.1.0 | The Maiden's Embrace | CarryOn 兼容 + 副手食物吸引（Mixin） |
 | v1.2.0 | The Maiden's Voice | 自定义亲吻音效（7 个随机变体） |
+| v1.3.0 | The Maiden's Identity | Modrinth 自动发布 + README 中英分离 + 显示名重命名 |
+| v1.3.1 | — | Mod ID 统一重命名为 touhou_maid_affection |

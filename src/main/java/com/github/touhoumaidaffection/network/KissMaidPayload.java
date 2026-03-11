@@ -1,6 +1,6 @@
-package com.github.maidaffection.network;
+package com.github.touhoumaidaffection.network;
 
-import com.github.maidaffection.MaidAffection;
+import com.github.touhoumaidaffection.TouhouMaidAffection;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 public record KissMaidPayload(int maidEntityId, int playerEntityId) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<KissMaidPayload> TYPE =
-            new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(MaidAffection.MOD_ID, "kiss_maid"));
+            new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(TouhouMaidAffection.MOD_ID, "kiss_maid"));
 
     public static final StreamCodec<ByteBuf, KissMaidPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, KissMaidPayload::maidEntityId,

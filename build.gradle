@@ -16,7 +16,7 @@ version = mod_version
 group = mod_group_id
 
 base {
-    archivesName = 'maid-affection'
+    archivesName = 'touhou-maid-affection'
 }
 
 repositories {
