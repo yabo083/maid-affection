@@ -2,6 +2,7 @@ package com.github.touhoumaidaffection;
 
 import com.github.touhoumaidaffection.client.KissClientHandler;
 import com.github.touhoumaidaffection.handler.KissMaidHandler;
+import com.github.touhoumaidaffection.handler.LifeLinkHandler;
 import com.github.touhoumaidaffection.network.KissMaidPayload;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -27,11 +28,15 @@ public class TouhouMaidAffection {
         // Register mob effects
         ModEffects.MOB_EFFECTS.register(modEventBus);
 
+        // Register data components
+        ModDataComponents.register(modEventBus);
+
         // Register network packets on mod bus
         modEventBus.addListener(this::registerPayloads);
 
         // Register game event handlers on NeoForge bus
         NeoForge.EVENT_BUS.register(KissMaidHandler.class);
+        NeoForge.EVENT_BUS.register(LifeLinkHandler.class);
 
         LOGGER.info("Touhou Maid: Affection loaded! Now you can kiss your maid~");
     }

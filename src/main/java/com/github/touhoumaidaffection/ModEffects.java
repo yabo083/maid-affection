@@ -1,5 +1,6 @@
 package com.github.touhoumaidaffection;
 
+import com.github.touhoumaidaffection.effect.LifeLinkEffect;
 import com.github.touhoumaidaffection.effect.MaidsPrayerEffect;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
@@ -12,4 +13,7 @@ public class ModEffects {
 
     public static final DeferredHolder<MobEffect, MobEffect> MAIDS_PRAYER =
             MOB_EFFECTS.register("maids_prayer", MaidsPrayerEffect::new);
+
+    public static final DeferredHolder<MobEffect, MobEffect> LIFE_LINK =
+            MOB_EFFECTS.register("life_link", LifeLinkEffect::new);
 }

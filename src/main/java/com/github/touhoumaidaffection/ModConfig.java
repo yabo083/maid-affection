@@ -36,6 +36,15 @@ public class ModConfig {
     public static final ModConfigSpec.IntValue FOV_ZOOM_OUT_TICKS;
     public static final ModConfigSpec.DoubleValue FOV_ZOOM_STRENGTH;
 
+    // Life Link
+    public static final ModConfigSpec.IntValue LIFE_LINK_MAX_BINDS;
+    public static final ModConfigSpec.DoubleValue LIFE_LINK_ENERGY_COEFFICIENT;
+    public static final ModConfigSpec.DoubleValue LIFE_LINK_REGEN_PER_SEC;
+    public static final ModConfigSpec.DoubleValue LIFE_LINK_SHARE_LEVEL_0;
+    public static final ModConfigSpec.DoubleValue LIFE_LINK_SHARE_LEVEL_1;
+    public static final ModConfigSpec.DoubleValue LIFE_LINK_SHARE_LEVEL_2;
+    public static final ModConfigSpec.DoubleValue LIFE_LINK_SHARE_LEVEL_3;
+
     static {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
 
@@ -152,9 +161,49 @@ public class ModConfig {
                 .defineInRange("zoomOutTicks", 6, 1, 60);
 
         FOV_ZOOM_STRENGTH = builder
-                .comment("Zoom strength (0.0 = no zoom, 1.0 = full zoom to 0 FOV) (default: 0.25)")
-                .defineInRange("strength", 0.25, 0.0, 0.8);
+                .comment("Zoom strength (0.0 = no zoom, 1.0 = full zoom to 0 FOV) (default: 0.85)")
+                .defineInRange("strength", 0.85, 0.0, 0.95);
 
+        builder.pop();
+
+        builder.comment("Life Link system",
+                        "Bind maids with a chain to create a virtual HP pool that absorbs damage")
+               .push("lifeLink");
+
+        LIFE_LINK_MAX_BINDS = builder
+                .comment("Maximum number of maids that can be bound to a single chain (default: 1)")
+                .defineInRange("maxBinds", 1, 1, 10);
+
+        LIFE_LINK_ENERGY_COEFFICIENT = builder
+                .comment("Energy per (favorability level + 1) for each bound maid (default: 5.0)",
+                         "e.g. Level 3 maid = (3+1)*5.0 = 20.0 max energy")
+                .defineInRange("energyCoefficient", 5.0, 1.0, 100.0);
+
+        LIFE_LINK_REGEN_PER_SEC = builder
+                .comment("Energy regeneration per second when not taking damage (default: 0.5)")
+                .defineInRange("regenPerSecond", 0.5, 0.0, 50.0);
+
+        builder.comment("Damage share ratio per average favorability level of bound maids",
+                        "Higher favorability = more damage absorbed by the virtual HP pool")
+               .push("shareRatio");
+
+        LIFE_LINK_SHARE_LEVEL_0 = builder
+                .comment("Share ratio at favorability level 0 (default: 0.15 = 15%)")
+                .defineInRange("level0", 0.15, 0.0, 1.0);
+
+        LIFE_LINK_SHARE_LEVEL_1 = builder
+                .comment("Share ratio at favorability level 1 (default: 0.25 = 25%)")
+                .defineInRange("level1", 0.25, 0.0, 1.0);
+
+        LIFE_LINK_SHARE_LEVEL_2 = builder
+                .comment("Share ratio at favorability level 2 (default: 0.35 = 35%)")
+                .defineInRange("level2", 0.35, 0.0, 1.0);
+
+        LIFE_LINK_SHARE_LEVEL_3 = builder
+                .comment("Share ratio at favorability level 3 (default: 0.50 = 50%)")
+                .defineInRange("level3", 0.50, 0.0, 1.0);
+
+        builder.pop();
         builder.pop();
 
         SPEC = builder.build();

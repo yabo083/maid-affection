@@ -6,5 +6,7 @@
   "tips.touhou_maid_affection.offhand_tempt": "Holding temptation items (default: cake) in offhand also attracts maids",
   "subtitles.touhou_maid_affection.kiss": "Kiss",
   "effect.touhou_maid_affection.maids_prayer": "Maid's Prayer",
-  "effect.touhou_maid_affection.maids_prayer.desc": "The resonance of affection becomes a devout prayer, infusing your body with vitality. Grants regeneration."
+  "effect.touhou_maid_affection.maids_prayer.desc": "The resonance of affection becomes a devout prayer, infusing your body with vitality. Grants regeneration.",
+  "effect.touhou_maid_affection.life_link": "Life Link",
+  "effect.touhou_maid_affection.life_link.desc": "The crimson thread of fate interweaves your lives. Your maid shares your burden of pain through a virtual soul shield, scaling with affection. She will never perish from this bond."
 }

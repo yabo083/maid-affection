@@ -2,73 +2,113 @@ package com.github.touhoumaidaffection.client;
 
 import com.github.touhoumaidaffection.ModConfig;
 import com.github.touhoumaidaffection.TouhouMaidAffection;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ComputeFovModifierEvent;
+import net.neoforged.neoforge.client.event.ViewportEvent;
 
 @EventBusSubscriber(modid = TouhouMaidAffection.MOD_ID, value = Dist.CLIENT)
 public class KissFovHandler {
 
-    // Zoom state — all client-side, single-player safe
     private static long zoomStartTime = -1;
     private static int zoomInTicks;
     private static int holdTicks;
     private static int zoomOutTicks;
     private static float zoomStrength;
 
+    // Camera angle forcing
+    private static int targetMaidId = -1;
+    private static float startYaw;
+    private static float startPitch;
+    private static float targetYaw;
+    private static float targetPitch;
+
     /**
-     * Trigger a smooth FOV zoom-in → hold → zoom-out sequence.
-     * Called from KissClientHandler when the kiss packet arrives.
+     * Trigger a zero-distance FOV zoom + camera snap to maid's face.
      */
-    public static void trigger() {
+    public static void trigger(int maidEntityId) {
         zoomStartTime = System.currentTimeMillis();
         zoomInTicks = ModConfig.FOV_ZOOM_IN_TICKS.get();
         holdTicks = ModConfig.FOV_HOLD_TICKS.get();
         zoomOutTicks = ModConfig.FOV_ZOOM_OUT_TICKS.get();
         zoomStrength = ModConfig.FOV_ZOOM_STRENGTH.get().floatValue();
+        targetMaidId = maidEntityId;
+
+        // Capture current camera angles and calculate target
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player != null && mc.level != null) {
+            startYaw = mc.player.getYRot();
+            startPitch = mc.player.getXRot();
+
+            Entity maid = mc.level.getEntity(maidEntityId);
+            if (maid != null) {
+                Vec3 eyePos = mc.player.getEyePosition();
+                Vec3 maidEye = maid.getEyePosition();
+                Vec3 diff = maidEye.subtract(eyePos);
+                double dist = diff.horizontalDistance();
+                targetYaw = (float) (Mth.atan2(diff.z, diff.x) * Mth.RAD_TO_DEG) - 90.0F;
+                targetPitch = (float) -(Mth.atan2(diff.y, dist) * Mth.RAD_TO_DEG);
+            } else {
+                targetYaw = startYaw;
+                targetPitch = startPitch;
+            }
+        }
+    }
+
+    /**
+     * Calculate the current animation progress factor (0 to 1 to 0).
+     * Returns -1 if animation is not active.
+     */
+    private static float getAnimFactor() {
+        if (zoomStartTime < 0) return -1f;
+
+        long elapsed = System.currentTimeMillis() - zoomStartTime;
+        float inMs = zoomInTicks * 50f;
+        float holdMs = holdTicks * 50f;
+        float outMs = zoomOutTicks * 50f;
+
+        if (elapsed > inMs + holdMs + outMs) {
+            zoomStartTime = -1;
+            targetMaidId = -1;
+            return -1f;
+        }
+
+        if (elapsed < inMs) {
+            return smoothstep(elapsed / inMs);
+        } else if (elapsed < inMs + holdMs) {
+            return 1.0f;
+        } else {
+            return 1.0f - smoothstep((elapsed - inMs - holdMs) / outMs);
+        }
     }
 
     @SubscribeEvent
     public static void onComputeFovModifier(ComputeFovModifierEvent event) {
-        if (zoomStartTime < 0) return;
+        float factor = getAnimFactor();
+        if (factor < 0) return;
 
-        long elapsed = System.currentTimeMillis() - zoomStartTime;
-        // Convert tick durations to millis (50ms per tick)
-        float inMs = zoomInTicks * 50f;
-        float holdMs = holdTicks * 50f;
-        float outMs = zoomOutTicks * 50f;
-        float totalMs = inMs + holdMs + outMs;
-
-        if (elapsed > totalMs) {
-            // Animation finished
-            zoomStartTime = -1;
-            return;
-        }
-
-        float factor;
-        if (elapsed < inMs) {
-            // Phase 1: zoom in — smoothstep ease-in
-            float t = elapsed / inMs;
-            factor = smoothstep(t);
-        } else if (elapsed < inMs + holdMs) {
-            // Phase 2: hold at max zoom
-            factor = 1.0f;
-        } else {
-            // Phase 3: zoom out — smoothstep ease-out
-            float t = (elapsed - inMs - holdMs) / outMs;
-            factor = 1.0f - smoothstep(t);
-        }
-
-        // Apply: multiply the current FOV modifier by (1 - strength * factor)
-        // strength=0.3 → at peak the FOV narrows to 70% of normal
         float modifier = 1.0f - zoomStrength * factor;
         event.setNewFovModifier(event.getNewFovModifier() * modifier);
     }
 
-    /**
-     * Smoothstep interpolation for natural-feeling zoom.
-     */
+    @SubscribeEvent
+    public static void onCameraAngles(ViewportEvent.ComputeCameraAngles event) {
+        float factor = getAnimFactor();
+        if (factor < 0 || targetMaidId < 0) return;
+
+        // Smoothly interpolate camera angles toward the maid's face
+        float lerpedYaw = Mth.rotLerp(factor, startYaw, targetYaw);
+        float lerpedPitch = Mth.lerp(factor, startPitch, targetPitch);
+
+        event.setYaw(lerpedYaw);
+        event.setPitch(lerpedPitch);
+    }
+
     private static float smoothstep(float t) {
         t = Math.max(0f, Math.min(1f, t));
         return t * t * (3f - 2f * t);
