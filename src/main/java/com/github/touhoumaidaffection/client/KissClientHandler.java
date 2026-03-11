@@ -19,6 +19,11 @@ public class KissClientHandler {
             Entity player = level.getEntity(payload.playerEntityId());
             if (maid == null || player == null) return;
 
+            // Trigger FOV zoom if this is the local player
+            if (player == Minecraft.getInstance().player && ModConfig.FOV_ZOOM_ENABLED.get()) {
+                KissFovHandler.trigger();
+            }
+
             // Calculate midpoint between player mouth and maid face
             Vec3 playerEye = player.getEyePosition();
             Vec3 maidEye = maid.getEyePosition();

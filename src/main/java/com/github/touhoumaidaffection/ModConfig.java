@@ -29,6 +29,13 @@ public class ModConfig {
     public static final ModConfigSpec.IntValue PARTICLE_COUNT_MIN;
     public static final ModConfigSpec.IntValue PARTICLE_COUNT_EXTRA;
 
+    // FOV zoom
+    public static final ModConfigSpec.BooleanValue FOV_ZOOM_ENABLED;
+    public static final ModConfigSpec.IntValue FOV_ZOOM_IN_TICKS;
+    public static final ModConfigSpec.IntValue FOV_HOLD_TICKS;
+    public static final ModConfigSpec.IntValue FOV_ZOOM_OUT_TICKS;
+    public static final ModConfigSpec.DoubleValue FOV_ZOOM_STRENGTH;
+
     static {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
 
@@ -121,6 +128,32 @@ public class ModConfig {
         PARTICLE_COUNT_EXTRA = builder
                 .comment("Extra random particles (total = min + random(0..extra)) (default: 4)")
                 .defineInRange("extraRandom", 4, 0, 50);
+
+        builder.pop();
+
+        builder.comment("FOV zoom effect on kiss",
+                        "Creates a smooth 'lean-in' feeling by narrowing the FOV")
+               .push("fov");
+
+        FOV_ZOOM_ENABLED = builder
+                .comment("Enable FOV zoom on kiss (default: true)")
+                .define("enabled", true);
+
+        FOV_ZOOM_IN_TICKS = builder
+                .comment("Zoom-in duration in ticks (default: 4 = 0.2s)")
+                .defineInRange("zoomInTicks", 4, 1, 40);
+
+        FOV_HOLD_TICKS = builder
+                .comment("Hold at max zoom duration in ticks (default: 3 = 0.15s)")
+                .defineInRange("holdTicks", 3, 0, 40);
+
+        FOV_ZOOM_OUT_TICKS = builder
+                .comment("Zoom-out duration in ticks (default: 6 = 0.3s)")
+                .defineInRange("zoomOutTicks", 6, 1, 60);
+
+        FOV_ZOOM_STRENGTH = builder
+                .comment("Zoom strength (0.0 = no zoom, 1.0 = full zoom to 0 FOV) (default: 0.25)")
+                .defineInRange("strength", 0.25, 0.0, 0.8);
 
         builder.pop();
 
