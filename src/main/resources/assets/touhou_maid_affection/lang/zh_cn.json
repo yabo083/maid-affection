@@ -8,5 +8,8 @@
   "effect.touhou_maid_affection.maids_prayer": "少女祈祷中……",
   "effect.touhou_maid_affection.maids_prayer.desc": "感情的共鸣转化为虔诚的祈祷，为你的身体注入活力。获得生命恢复效果。",
   "effect.touhou_maid_affection.life_link": "生命连锁",
-  "effect.touhou_maid_affection.life_link.desc": "命运的红丝线将彼此的生命交织。以冰冷的钢铁为媒，将虚幻的羁绊凝为实体的护佑。女仆为你分担伤害，分摊比例随好感度提升，且不会导致女仆死亡。"
+  "effect.touhou_maid_affection.life_link.desc": "命运的红丝线将彼此的生命交织。以冰冷的钢铁为媒，将虚幻的羁绊凝为实体的护佑。女仆为你分担伤害，分摊比例随好感度提升，且不会导致女仆死亡。",
+  "tips.touhou_maid_affection.life_link.bind": "\u00a7a灵魂契约缔结 —— 生命连锁已绑定！",
+  "tips.touhou_maid_affection.life_link.unbind": "\u00a7e灵魂契约解除 —— 生命连锁已释放。",
+  "tips.touhou_maid_affection.life_link.max_reached": "\u00a7c这条锁链的绑定数已达上限。"
 }

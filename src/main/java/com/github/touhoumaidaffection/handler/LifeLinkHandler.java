@@ -15,7 +15,10 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Items;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -28,13 +31,14 @@ public class LifeLinkHandler {
     /**
      * Shift+right-click maid with chain to bind/unbind.
      */
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onPlayerInteractEntity(PlayerInteractEvent.EntityInteract event) {
         Player player = event.getEntity();
         Entity target = event.getTarget();
         if (player.level().isClientSide) return;
         if (!(target instanceof EntityMaid maid)) return;
         if (!player.isShiftKeyDown()) return;
+        if (event.getHand() != InteractionHand.MAIN_HAND) return;
 
         ItemStack mainHand = player.getMainHandItem();
         if (!mainHand.is(Items.CHAIN)) return;
@@ -48,19 +52,30 @@ public class LifeLinkHandler {
 
         if (data.isBound(maidUuid)) {
             // Unbind
-            mainHand.set(ModDataComponents.LIFE_LINK.get(), data.withoutMaid(maidUuid));
+            LifeLinkData updatedData = data.withoutMaid(maidUuid);
+            mainHand.set(ModDataComponents.LIFE_LINK.get(), updatedData);
+            if (!updatedData.hasBoundMaids()) {
+                mainHand.remove(DataComponents.ENCHANTMENT_GLINT_OVERRIDE);
+            }
             player.level().playSound(null, maid.getX(), maid.getY(), maid.getZ(),
                     SoundEvents.CHAIN_BREAK, SoundSource.PLAYERS, 1.0F, 1.0F);
+            player.displayClientMessage(Component.translatable("tips.touhou_maid_affection.life_link.unbind"), true);
         } else {
             // Check max bindings
             int maxBinds = ModConfig.LIFE_LINK_MAX_BINDS.get();
             if (data.boundMaids().size() >= maxBinds) {
+                player.displayClientMessage(Component.translatable("tips.touhou_maid_affection.life_link.max_reached"), true);
                 return;
             }
             // Bind
             mainHand.set(ModDataComponents.LIFE_LINK.get(), data.withBoundMaid(maidUuid));
+            mainHand.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
             player.level().playSound(null, maid.getX(), maid.getY(), maid.getZ(),
                     SoundEvents.CHAIN_PLACE, SoundSource.PLAYERS, 1.0F, 1.2F);
+            player.level().playSound(null, maid.getX(), maid.getY(), maid.getZ(),
+                    SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1.0F, 1.0F);
+            player.displayClientMessage(Component.translatable("tips.touhou_maid_affection.life_link.bind"), true);
+            player.swing(InteractionHand.MAIN_HAND, true);
             // Binding particles
             if (player.level() instanceof ServerLevel serverLevel) {
                 serverLevel.sendParticles(ParticleTypes.ENCHANT,
