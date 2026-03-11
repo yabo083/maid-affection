@@ -23,6 +23,8 @@
 
 ## ✨ Features
 
+### 💋 Kiss System
+
 | Feature | Description |
 |---|---|
 | 💋 **Kiss Interaction** | Sneak + empty hand + right-click your maid to kiss her |
@@ -31,30 +33,44 @@
 | 📈 **Favorability Boost** | Each kiss grants **+3 favorability** (30s cooldown) |
 | 👀 **Maid Gaze** | Your maid turns to look at you during the kiss |
 | ⏱️ **Tiered Cooldown** | Cooldown decreases as maid favorability rises: 5s → 3s → 1s → 0s |
-| 🙏 **Maid's Prayer Buff** | Kiss 3 times within 10s to grant Regeneration I (30s) to both you and your maid |
-| ⚙️ **Fully Configurable** | All values tunable via `config/touhou_maid_affection-common.toml` |
-| 📦 **CarryOn Compatible** | Auto-detects CarryOn mod and avoids interaction conflicts |
-| 🧲 **Offhand Attraction** | Holding temptation items (e.g. cake) in your offhand also attracts maids |
+| 🎥 **Zero-Distance Camera** | Camera smoothly zooms into the maid's face on kiss — true face-to-face close-up |
 
-## 🎮 How to Trigger
+### 🙏 Maid's Prayer (少女祈祷)
 
-### Default (without CarryOn)
+Kiss **3 times within 10 seconds** to trigger the **Maid's Prayer** buff on both you and your maid.
 
-```
-Sneak (Shift) + Empty Hand + Right-click your maid
-```
+- Custom MobEffect with built-in regeneration (not vanilla Regeneration)
+- Regen strength **scales with favorability level**:
+  - Level 0: Regen I
+  - Level 1: Regen II
+  - Level 2: Regen III *(beyond vanilla!)*
+  - Level 3: Regen V *(the power of love!)*
+- Duration: 30 seconds (configurable)
 
-### With CarryOn installed
+### 🔗 Life Link (生命连锁)
 
-Since CarryOn uses "Sneak + Both Hands Empty + Right-click" to pick up entities, this mod automatically adjusts to avoid conflicts:
+Use a **Chain** item to forge a soul contract with your maid. The chain becomes a carrier for a virtual HP pool (Soul Shield) that absorbs damage for you.
 
-```
-Sneak (Shift) + Main Hand Empty + Offhand Holding Any Item + Right-click your maid
-```
+**How to Use:**
 
-> 💡 **Tip**: Just put a torch, flower, or anything in your offhand. With both hands empty, CarryOn takes over (picks up the maid).
+1. **Bind**: Hold a Chain in your main hand → **Sneak + Right-click** a maid to bind her
+2. **Unbind**: Same operation on an already-bound maid to release her
+3. **Passive Protection**: Keep the bound chain anywhere in your inventory — when you take damage, the chain's energy absorbs a portion
+4. **View Red Thread**: Hold the bound chain in either hand to see the crimson thread connecting you and your maid
 
-## 🧲 Offhand Maid Attraction
+**Mechanics:**
+
+| Mechanic | Details |
+|---|---|
+| **Virtual HP Pool** | Energy = (favorability level + 1) × 5.0 per bound maid |
+| **Damage Share** | Level 0: 15% → Level 1: 25% → Level 2: 35% → Level 3: 50% |
+| **Energy Regen** | 0.5 energy/second |
+| **Max Binds** | 1 maid per chain (configurable up to 10) |
+| **Maid Safety** | Virtual HP only — your maid takes **zero** actual damage |
+| **Visual** | Red particle line when holding chain (gray when energy depleted) |
+| **Indicator** | "Life Link" MobEffect icon shown when shield is active |
+
+### 🧲 Offhand Maid Attraction
 
 In vanilla TouhouLittleMaid, only **main hand** cake attracts maids. This mod extends that behavior via Mixin:
 
@@ -62,13 +78,31 @@ In vanilla TouhouLittleMaid, only **main hand** cake attracts maids. This mod ex
 Offhand holding temptation item (default: cake) → Maid is also attracted
 ```
 
-> 🎀 **Best combo with CarryOn**: Hold cake in offhand to attract your maid, then sneak + right-click to kiss — seamless!
+### 📦 CarryOn Compatibility
+
+Auto-detects CarryOn mod. When installed, kiss trigger changes to avoid conflict:
+
+```
+Sneak + Main Hand Empty + Offhand Holding Any Item + Right-click maid
+```
+
+> 💡 **Tip**: Hold cake in offhand to attract your maid, then sneak + right-click to kiss — seamless!
+
+### ⚙️ Fully Configurable
+
+All values are tunable in `config/touhou_maid_affection-common.toml`:
+- Kiss cooldown per favorability level
+- Favorability points and cooldown
+- Maid's Prayer thresholds, duration, regen amplifiers
+- Life Link energy coefficient, share ratios, regen rate, max binds
+- FOV zoom strength and timing
+- Particle counts
 
 ## 📥 Installation
 
 1. Install **Minecraft 1.21.1** + **NeoForge 21.1.x**
 2. Install **[Touhou Little Maid](https://modrinth.com/mod/touhou-little-maid)** 1.5.0+
-3. Drop `maid-affection-x.x.x.jar` into your `.minecraft/mods/` folder
+3. Drop `touhou-maid-affection-x.x.x.jar` into your `.minecraft/mods/` folder
 4. Launch the game!
 
 ## 🛠️ Build from Source
@@ -79,7 +113,7 @@ cd maid-affection
 ./gradlew build
 ```
 
-Output jar at `build/libs/maid-affection-x.x.x.jar`.
+Output jar at `build/libs/touhou-maid-affection-x.x.x.jar`.
 
 ## 📋 Technical Details
 
@@ -88,6 +122,9 @@ Output jar at `build/libs/maid-affection-x.x.x.jar`.
 - **Networking**: Custom `KissMaidPayload` packet (Server → Client) for particle sync
 - **Compatibility**: Soft-detects CarryOn via `ModList.isLoaded()`, zero hard dependencies
 - **Favorability**: Uses TLM's built-in `FavorabilityManager` + custom `Type("Kiss", 3, 600)`
+- **Data Storage**: Life Link data stored as `DataComponentType` on chain ItemStacks (persists in inventory)
+- **Client Effects**: FOV zoom via `ComputeFovModifierEvent` + camera angles via `ViewportEvent.ComputeCameraAngles`
+- **Damage System**: Life Link intercepts `LivingIncomingDamageEvent` and reduces damage before it's applied
 
 ## 📄 License
 
