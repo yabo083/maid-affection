@@ -2,11 +2,14 @@
   <img src="image/README/1773209564540.png" alt="Kiss your maid!" width="600"/>
 </p>
 
-<h1 align="center">💋 Maid Affection — 女仆亲亲</h1>
+<h1 align="center">💋 Maid Affection</h1>
 
 <p align="center">
-  <b>Kiss your Touhou Little Maid. Because she deserves it.</b><br/>
-  <i>亲亲你的女仆吧，她值得。</i>
+  <b>Kiss your Touhou Little Maid. Because she deserves it.</b>
+</p>
+
+<p align="center">
+  <a href="README_zh.md">🌏 中文</a>
 </p>
 
 <p align="center">
@@ -18,55 +21,55 @@
 
 ---
 
-## ✨ 功能特性
+## ✨ Features
 
-| 特性                     | 描述                                               |
-| ------------------------ | -------------------------------------------------- |
-| 💋**亲吻互动**     | 潜行 + 空手右击你的女仆，触发亲吻                  |
-| 💕**爱心粒子**     | 亲吻时在两人之间生成浪漫的爱心粒子效果             |
-| 🔊**亲吻音效**     | 播放清脆的亲吻音效                                 |
-| 📈**好感度提升**   | 每次亲吻为女仆增加**+3 好感度**（30 秒冷却） |
-| 👀**女仆凝视**     | 亲吻时女仆会转头看向你                             |
-| ⏱️**防刷屏**     | 2 秒交互冷却，防止粒子刷屏                         |
-| 📦**CarryOn 兼容** | 自动检测 CarryOn 模组，智能避免操作冲突            |
-| 🧲**副手吸引**     | 副手持有诱惑物品（默认蛋糕）也能吸引女仆过来       |
+| Feature | Description |
+|---|---|
+| 💋 **Kiss Interaction** | Sneak + empty hand + right-click your maid to kiss her |
+| 💕 **Heart Particles** | Romantic heart particles spawn between you and your maid |
+| 🔊 **Kiss Sound Effects** | Plays crisp kissing sounds (7 random variants) |
+| 📈 **Favorability Boost** | Each kiss grants **+3 favorability** (30s cooldown) |
+| 👀 **Maid Gaze** | Your maid turns to look at you during the kiss |
+| ⏱️ **Anti-Spam** | 2-second interaction cooldown to prevent particle spam |
+| 📦 **CarryOn Compatible** | Auto-detects CarryOn mod and avoids interaction conflicts |
+| 🧲 **Offhand Attraction** | Holding temptation items (e.g. cake) in your offhand also attracts maids |
 
-## 🎮 触发条件
+## 🎮 How to Trigger
 
-### 默认（无 CarryOn）
-
-```
-潜行（Shift）+ 空手 + 右击你的女仆
-```
-
-### 安装了 CarryOn 时
-
-由于 CarryOn 使用「潜行 + 双手空 + 右击」来搬起实体，本模组会自动调整触发方式以避免冲突：
+### Default (without CarryOn)
 
 ```
-潜行（Shift）+ 主手为空 + 副手持有任意物品 + 右击你的女仆
+Sneak (Shift) + Empty Hand + Right-click your maid
 ```
 
-> 💡 **提示**：副手放一个火把、花或任何物品即可。双手全空时将由 CarryOn 接管（搬起女仆）。
+### With CarryOn installed
 
-## 🧲 副手吸引女仆
-
-原版 TouhouLittleMaid 中，只有**主手**持蛋糕才能吸引女仆。本模组通过 Mixin 扩展了这一行为：
+Since CarryOn uses "Sneak + Both Hands Empty + Right-click" to pick up entities, this mod automatically adjusts to avoid conflicts:
 
 ```
-副手持有诱惑物品（默认蛋糕）→ 女仆也会被吸引过来
+Sneak (Shift) + Main Hand Empty + Offhand Holding Any Item + Right-click your maid
 ```
 
-> 🎀 **搭配 CarryOn 使用的最佳姿势**：副手放蛋糕吸引女仆过来，然后潜行右击亲吻——一气呵成！
+> 💡 **Tip**: Just put a torch, flower, or anything in your offhand. With both hands empty, CarryOn takes over (picks up the maid).
 
-## 📥 安装
+## 🧲 Offhand Maid Attraction
 
-1. 安装 **Minecraft 1.21.1** + **NeoForge 21.1.x**
-2. 安装 **[Touhou Little Maid](https://modrinth.com/mod/touhou-little-maid)** 1.5.0+
-3. 将 `maid-affection-x.x.x.jar` 放入 `.minecraft/mods/` 文件夹
-4. 启动游戏！
+In vanilla TouhouLittleMaid, only **main hand** cake attracts maids. This mod extends that behavior via Mixin:
 
-## 🛠️ 从源码构建
+```
+Offhand holding temptation item (default: cake) → Maid is also attracted
+```
+
+> 🎀 **Best combo with CarryOn**: Hold cake in offhand to attract your maid, then sneak + right-click to kiss — seamless!
+
+## 📥 Installation
+
+1. Install **Minecraft 1.21.1** + **NeoForge 21.1.x**
+2. Install **[Touhou Little Maid](https://modrinth.com/mod/touhou-little-maid)** 1.5.0+
+3. Drop `maid-affection-x.x.x.jar` into your `.minecraft/mods/` folder
+4. Launch the game!
+
+## 🛠️ Build from Source
 
 ```bash
 git clone https://github.com/yabo083/maid-affection.git
@@ -74,19 +77,19 @@ cd maid-affection
 ./gradlew build
 ```
 
-构建产物在 `build/libs/maid-affection-x.x.x.jar`。
+Output jar at `build/libs/maid-affection-x.x.x.jar`.
 
-## 📋 技术细节
+## 📋 Technical Details
 
 - **Mod ID**: `maid_affection`
-- **API**: 使用 TouhouLittleMaid 提供的 `InteractMaidEvent` 事件 API
-- **网络**: 自定义 `KissMaidPayload` 包（Server → Client）用于同步粒子效果
-- **兼容性**: 通过 `ModList.isLoaded()` 软检测 CarryOn，零硬依赖
-- **好感度**: 使用 TLM 内置的 `FavorabilityManager` + 自定义 `Type("Kiss", 3, 600)`
+- **API**: Uses TouhouLittleMaid's `InteractMaidEvent` event API
+- **Networking**: Custom `KissMaidPayload` packet (Server → Client) for particle sync
+- **Compatibility**: Soft-detects CarryOn via `ModList.isLoaded()`, zero hard dependencies
+- **Favorability**: Uses TLM's built-in `FavorabilityManager` + custom `Type("Kiss", 3, 600)`
 
 ## 📄 License
 
-[MIT License](LICENSE) — 自由使用、修改和分发。
+[MIT License](LICENSE) — Free to use, modify, and distribute.
 
 ---
 
