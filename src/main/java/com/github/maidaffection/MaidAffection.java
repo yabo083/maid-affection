@@ -17,6 +17,9 @@ public class MaidAffection {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     public MaidAffection(IEventBus modEventBus) {
+        // Register sound events
+        ModSounds.SOUNDS.register(modEventBus);
+
         // Register network packets on mod bus
         modEventBus.addListener(this::registerPayloads);
 

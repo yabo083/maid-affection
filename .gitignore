@@ -29,3 +29,6 @@ desktop.ini
 
 # Root META-INF (duplicate, real one is in src/main/resources/)
 /META-INF/
+
+# Source audio files (only OGG needed)
+src/main/resources/kissSound/

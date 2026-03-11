@@ -1,11 +1,10 @@
 package com.github.maidaffection.handler;
 
+import com.github.maidaffection.ModSounds;
 import com.github.maidaffection.network.KissMaidPayload;
 import com.github.tartaricacid.touhoulittlemaid.api.event.InteractMaidEvent;
 import com.github.tartaricacid.touhoulittlemaid.entity.favorability.Type;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -85,8 +84,8 @@ public class KissMaidHandler {
         double midY = (player.getEyeY() + maid.getEyeY()) / 2.0;
         double midZ = (player.getZ() + maid.getZ()) / 2.0;
         player.level().playSound(null, midX, midY, midZ,
-                SoundEvents.PLAYER_SPLASH_HIGH_SPEED, SoundSource.PLAYERS,
-                0.4F, 1.8F);
+                ModSounds.KISS.get(), SoundSource.PLAYERS,
+                1.0F, 1.0F);
 
         // Broadcast particle packet to all tracking clients
         KissMaidPayload payload = new KissMaidPayload(maid.getId(), player.getId());
