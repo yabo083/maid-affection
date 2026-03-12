@@ -1,7 +1,9 @@
 package com.github.touhoumaidaffection;
 
 import com.github.touhoumaidaffection.client.KissClientHandler;
+import com.github.touhoumaidaffection.handler.KissCarryRequestHandler;
 import com.github.touhoumaidaffection.handler.KissMaidHandler;
+import com.github.touhoumaidaffection.network.KissCarryRequestPayload;
 import com.github.touhoumaidaffection.network.KissMaidPayload;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -42,6 +44,11 @@ public class TouhouMaidAffection {
                 KissMaidPayload.TYPE,
                 KissMaidPayload.STREAM_CODEC,
                 KissClientHandler::handle
+        );
+        registrar.playToServer(
+                KissCarryRequestPayload.TYPE,
+                KissCarryRequestPayload.STREAM_CODEC,
+                KissCarryRequestHandler::handle
         );
     }
 }

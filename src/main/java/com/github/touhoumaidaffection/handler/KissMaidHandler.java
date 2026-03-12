@@ -61,6 +61,26 @@ public class KissMaidHandler {
             return;
         }
 
+        if (executeKiss(player, maid)) {
+            // Cancel to prevent opening the maid GUI when kiss succeeds
+            event.setCanceled(true);
+        }
+    }
+
+    public static void tryKissCarriedMaid(Player player) {
+        if (player.level().isClientSide) {
+            return;
+        }
+
+        for (var passenger : player.getPassengers()) {
+            if (passenger instanceof EntityMaid maid) {
+                executeKiss(player, maid);
+                return;
+            }
+        }
+    }
+
+    private static boolean executeKiss(Player player, EntityMaid maid) {
         // Tiered cooldown check based on maid's favorability level
         long currentTick = player.level().getGameTime();
         int favLevel = maid.getFavorabilityManager().getLevel();
@@ -68,12 +88,8 @@ public class KissMaidHandler {
 
         Long lastKiss = COOLDOWNS.get(player.getUUID());
         if (cooldown > 0 && lastKiss != null && (currentTick - lastKiss) < cooldown) {
-            event.setCanceled(true);
-            return;
+            return false;
         }
-
-        // Cancel to prevent opening the maid GUI
-        event.setCanceled(true);
 
         // Record cooldown
         COOLDOWNS.put(player.getUUID(), currentTick);
@@ -103,6 +119,7 @@ public class KissMaidHandler {
         if (ModConfig.BUFF_ENABLED.get()) {
             handleBuffTrigger(player, maid, currentTick, favLevel);
         }
+        return true;
     }
 
     private static int getAmplifierForLevel(int level) {

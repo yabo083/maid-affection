@@ -35,6 +35,19 @@
 | ⏱️ **Tiered Cooldown** | Cooldown decreases as maid favorability rises: 5s → 3s → 1s → 0s |
 | 🎥 **Zero-Distance Camera** | Camera smoothly zooms into the maid's face on kiss — true face-to-face close-up |
 
+### 🤲 Princess-Carry Kiss Key
+
+When you princess-carry a maid with a saddle (maid riding player), right-click can be awkward.  
+This mod adds a dedicated keybind in Controls:
+
+```
+Touhou Maid: Affection -> Kiss Carried Maid (default: V)
+```
+
+- Works only while carrying a maid as passenger
+- Keeps original right-click kiss behavior unchanged for normal state
+- Uses a dedicated carried-kiss camera target for better head-to-head framing
+
 ### 🙏 Maid's Prayer (少女祈祷)
 
 Kiss **3 times within 10 seconds** to trigger the **Maid's Prayer** buff on both you and your maid.
@@ -72,6 +85,10 @@ All values are tunable in `config/touhou_maid_affection-common.toml`:
 - Favorability points and cooldown
 - Maid's Prayer thresholds, duration, regen amplifiers
 - FOV zoom strength and timing
+- Princess-carry camera offsets:
+  - `carriedSideOffset` (default `0.48`)
+  - `carriedForwardOffset` (default `0.16`)
+  - `carriedVerticalOffset` (default `-0.10`)
 - Particle counts
 
 ## 📥 Installation
@@ -95,7 +112,7 @@ Output jar at `build/libs/touhou-maid-affection-x.x.x.jar`.
 
 - **Mod ID**: `touhou_maid_affection`
 - **API**: Uses TouhouLittleMaid's `InteractMaidEvent` event API
-- **Networking**: Custom `KissMaidPayload` packet (Server → Client) for particle sync
+- **Networking**: `KissMaidPayload` (Server → Client) for effects + `KissCarryRequestPayload` (Client → Server) for princess-carry key trigger
 - **Compatibility**: Soft-detects CarryOn via `ModList.isLoaded()`, zero hard dependencies
 - **Favorability**: Uses TLM's built-in `FavorabilityManager` + custom `Type("Kiss", 3, 600)`
 - **Client Effects**: FOV zoom via `ComputeFovModifierEvent` + camera angles via `ViewportEvent.ComputeCameraAngles`

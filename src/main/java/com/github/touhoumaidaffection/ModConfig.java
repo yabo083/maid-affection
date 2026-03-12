@@ -35,6 +35,9 @@ public class ModConfig {
     public static final ModConfigSpec.IntValue FOV_HOLD_TICKS;
     public static final ModConfigSpec.IntValue FOV_ZOOM_OUT_TICKS;
     public static final ModConfigSpec.DoubleValue FOV_ZOOM_STRENGTH;
+    public static final ModConfigSpec.DoubleValue FOV_CARRIED_SIDE_OFFSET;
+    public static final ModConfigSpec.DoubleValue FOV_CARRIED_FORWARD_OFFSET;
+    public static final ModConfigSpec.DoubleValue FOV_CARRIED_VERTICAL_OFFSET;
 
     static {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -154,6 +157,19 @@ public class ModConfig {
         FOV_ZOOM_STRENGTH = builder
                 .comment("Zoom strength (0.0 = no zoom, 1.0 = full zoom to 0 FOV) (default: 0.85)")
                 .defineInRange("strength", 0.85, 0.0, 0.95);
+
+        FOV_CARRIED_SIDE_OFFSET = builder
+                .comment("Princess-carry camera target side offset relative to player look direction",
+                        "Negative = left, positive = right (default: 0.48)")
+                .defineInRange("carriedSideOffset", 0.48, -1.5, 1.5);
+
+        FOV_CARRIED_FORWARD_OFFSET = builder
+                .comment("Princess-carry camera target forward offset (default: 0.16)")
+                .defineInRange("carriedForwardOffset", 0.16, -1.0, 1.0);
+
+        FOV_CARRIED_VERTICAL_OFFSET = builder
+                .comment("Princess-carry camera target vertical offset from player eye (default: -0.10)")
+                .defineInRange("carriedVerticalOffset", -0.10, -1.0, 1.0);
 
         builder.pop();
 

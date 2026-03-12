@@ -35,6 +35,19 @@
 | ⏱️ **分级冷却** | 冷却时间随好感度等级降低：5秒 → 3秒 → 1秒 → 0秒 |
 | 🎥 **零距离镜头** | 亲吻时镜头平滑推近到女仆面前——真正的面对面特写 |
 
+### 🤲 公主抱亲吻按键
+
+当你用鞍把女仆公主抱起来（女仆作为玩家乘客）时，右键命中会变得困难。  
+本模组新增了原生可改键位：
+
+```
+女仆亲亲 -> 公主抱亲吻（默认：V）
+```
+
+- 仅在“正在公主抱女仆”时生效
+- 不影响普通状态下的原有右键亲吻
+- 公主抱状态会使用专门的相机对焦逻辑，尽量保持头对头构图
+
 ### 🙏 少女祈祷
 
 在 **10 秒内亲吻 3 次** 即可触发「少女祈祷」增益，同时施加给你和女仆。
@@ -72,6 +85,10 @@
 - 好感度增加量和冷却
 - 少女祈祷的触发阈值、持续时间、恢复倍率
 - FOV 缩放强度和动画时长
+- 公主抱相机偏移参数：
+  - `carriedSideOffset`（默认 `0.48`）
+  - `carriedForwardOffset`（默认 `0.16`）
+  - `carriedVerticalOffset`（默认 `-0.10`）
 - 粒子数量
 
 ## 📥 安装
@@ -95,7 +112,7 @@ cd maid-affection
 
 - **Mod ID**: `touhou_maid_affection`
 - **API**: 使用 TouhouLittleMaid 提供的 `InteractMaidEvent` 事件 API
-- **网络**: 自定义 `KissMaidPayload` 包（Server → Client）用于同步粒子效果
+- **网络**: `KissMaidPayload`（Server → Client）用于特效同步，`KissCarryRequestPayload`（Client → Server）用于公主抱按键触发
 - **兼容性**: 通过 `ModList.isLoaded()` 软检测 CarryOn，零硬依赖
 - **好感度**: 使用 TLM 内置的 `FavorabilityManager` + 自定义 `Type("Kiss", 3, 600)`
 - **客户端效果**: FOV 缩放通过 `ComputeFovModifierEvent` + 镜头角度通过 `ViewportEvent.ComputeCameraAngles` 实现
