@@ -1,16 +1,10 @@
 plugins {
-    id 'java-library'
     id 'eclipse'
     id 'idea'
-    id 'net.neoforged.moddev' version '2.0.95'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'com.modrinth.minotaur' version '2.+'
 }
-
-tasks.named('wrapper', Wrapper).configure {
-    distributionType = Wrapper.DistributionType.ALL
-}
-
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 version = mod_version
 group = mod_group_id
@@ -19,67 +13,60 @@ base {
     archivesName = 'touhou-maid-affection'
 }
 
-repositories {
-    mavenLocal()
-    maven {
-        name = "Modrinth"
-        url = "https://api.modrinth.com/maven"
-        content {
-            includeGroup "maven.modrinth"
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+minecraft {
+    mappings channel: mapping_channel, version: mapping_version
+    copyIdeResources = true
+
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        client {
+            property 'forge.enabledGameTestNamespaces', mod_id
+        }
+
+        server {
+            property 'forge.enabledGameTestNamespaces', mod_id
+            args '--nogui'
         }
     }
 }
 
-neoForge {
-    version = project.neo_version
-
-    parchment {
-        mappingsVersion = project.parchment_mappings_version
-        minecraftVersion = project.parchment_minecraft_version
-    }
-
-    runs {
-        client {
-            client()
-            gameDirectory = project.file('run/client')
-            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
-        }
-
-        server {
-            server()
-            gameDirectory = project.file('run/server')
-            programArgument '--nogui'
-            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
-        }
-
-        configureEach {
-            jvmArguments = [
-                    '-XX:+IgnoreUnrecognizedVMOptions',
-                    '-XX:+AllowEnhancedClassRedefinition'
-            ]
-            systemProperty 'forge.logging.markers', 'REGISTRIES'
-            logLevel = org.slf4j.event.Level.DEBUG
-        }
-    }
-
-    mods {
-        "${mod_id}" {
-            sourceSet sourceSets.main
+repositories {
+    mavenLocal()
+    maven {
+        name = 'Modrinth'
+        url = 'https://api.modrinth.com/maven'
+        content {
+            includeGroup 'maven.modrinth'
         }
     }
 }
 
 dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
     // Touhou Little Maid - compile only, not bundled
-    compileOnly "maven.modrinth:touhou-little-maid:${tlm_version}"
+    compileOnly fg.deobf("maven.modrinth:touhou-little-maid:${tlm_version}")
 }
 
-tasks.withType(ProcessResources).configureEach {
+tasks.named('processResources', ProcessResources).configure {
     var replaceProperties = [
             minecraft_version      : minecraft_version,
             minecraft_version_range: minecraft_version_range,
-            neo_version            : neo_version,
-            neo_version_range      : neo_version_range,
+            forge_version          : forge_version,
+            forge_version_range    : forge_version_range,
             loader_version_range   : loader_version_range,
             mod_id                 : mod_id,
             mod_name               : mod_name,
@@ -90,20 +77,30 @@ tasks.withType(ProcessResources).configureEach {
     ]
     inputs.properties replaceProperties
 
-    filesMatching(['META-INF/neoforge.mods.toml']) {
-        expand replaceProperties
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties + [project: project]
     }
+}
+
+tasks.named('jar', Jar).configure {
+    manifest {
+        attributes([
+                'Specification-Title'     : mod_id,
+                'Specification-Vendor'    : mod_authors,
+                'Specification-Version'   : '1',
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Vendor'   : mod_authors,
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                'MixinConfigs'            : 'touhou_maid_affection.mixins.json'
+        ])
+    }
+
+    finalizedBy 'reobfJar'
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-}
-
-idea {
-    module {
-        downloadSources = true
-        downloadJavadoc = true
-    }
 }
 
 java {
@@ -111,18 +108,18 @@ java {
 }
 
 modrinth {
-    token = System.getenv("MODRINTH_TOKEN")
+    token = System.getenv('MODRINTH_TOKEN')
     projectId = project.modrinth_project_id
-    versionNumber = project.mod_version
-    versionName = "v${project.mod_version}"
-    versionType = "release"
+    versionNumber = "${project.mod_version}+forge1.20.1"
+    versionName = "v${project.mod_version} (Forge 1.20.1)"
+    versionType = 'release'
     uploadFile = jar
     gameVersions = [project.minecraft_version]
-    loaders = ["neoforge"]
-    changelog = System.getenv("CHANGELOG") ?: "See https://github.com/yabo083/maid-affection/releases/tag/v${project.mod_version}"
-    syncBodyFrom = rootProject.file("README_zh.md").text
+    loaders = ['forge']
+    changelog = System.getenv('CHANGELOG') ?: "See https://github.com/yabo083/maid-affection/releases/tag/v${project.mod_version}-forge1.20.1"
+    syncBodyFrom = rootProject.file('README_zh.md').text
     dependencies {
-        required.project "touhou-little-maid"
+        required.project 'touhou-little-maid'
     }
 }
 

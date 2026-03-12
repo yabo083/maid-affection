@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Minecraft-1.21.1-green?style=flat-square" alt="MC 1.21.1"/>
+  <img src="https://img.shields.io/badge/Minecraft-1.20.1-green?style=flat-square" alt="MC 1.20.1"/>
   <img src="https://img.shields.io/badge/NeoForge-21.1.x-orange?style=flat-square" alt="NeoForge"/>
   <img src="https://img.shields.io/badge/Requires-Touhou_Little_Maid_1.5.0+-blue?style=flat-square" alt="TLM"/>
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT"/>
@@ -76,7 +76,7 @@
 
 ## 📥 安装
 
-1. 安装 **Minecraft 1.21.1** + **NeoForge 21.1.x**
+1. 安装 **Minecraft 1.20.1** + **Forge 47.4.x**
 2. 安装 **[Touhou Little Maid](https://modrinth.com/mod/touhou-little-maid)** 1.5.0+
 3. 将 `touhou-maid-affection-x.x.x.jar` 放入 `.minecraft/mods/` 文件夹
 4. 启动游戏！

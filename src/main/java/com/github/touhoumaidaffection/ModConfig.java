@@ -1,43 +1,43 @@
 package com.github.touhoumaidaffection;
 
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ModConfig {
-    public static final ModConfigSpec SPEC;
+    public static final ForgeConfigSpec SPEC;
 
     // Kiss cooldown (tiered by favorability level)
-    public static final ModConfigSpec.IntValue COOLDOWN_LEVEL_0;
-    public static final ModConfigSpec.IntValue COOLDOWN_LEVEL_1;
-    public static final ModConfigSpec.IntValue COOLDOWN_LEVEL_2;
-    public static final ModConfigSpec.IntValue COOLDOWN_LEVEL_3;
+    public static final ForgeConfigSpec.IntValue COOLDOWN_LEVEL_0;
+    public static final ForgeConfigSpec.IntValue COOLDOWN_LEVEL_1;
+    public static final ForgeConfigSpec.IntValue COOLDOWN_LEVEL_2;
+    public static final ForgeConfigSpec.IntValue COOLDOWN_LEVEL_3;
 
     // Favorability
-    public static final ModConfigSpec.IntValue FAVORABILITY_POINTS;
-    public static final ModConfigSpec.IntValue FAVORABILITY_COOLDOWN;
+    public static final ForgeConfigSpec.IntValue FAVORABILITY_POINTS;
+    public static final ForgeConfigSpec.IntValue FAVORABILITY_COOLDOWN;
 
     // Buff
-    public static final ModConfigSpec.BooleanValue BUFF_ENABLED;
-    public static final ModConfigSpec.IntValue BUFF_KISS_THRESHOLD;
-    public static final ModConfigSpec.IntValue BUFF_KISS_WINDOW;
-    public static final ModConfigSpec.IntValue BUFF_DURATION;
-    public static final ModConfigSpec.IntValue BUFF_AMPLIFIER_LEVEL_0;
-    public static final ModConfigSpec.IntValue BUFF_AMPLIFIER_LEVEL_1;
-    public static final ModConfigSpec.IntValue BUFF_AMPLIFIER_LEVEL_2;
-    public static final ModConfigSpec.IntValue BUFF_AMPLIFIER_LEVEL_3;
+    public static final ForgeConfigSpec.BooleanValue BUFF_ENABLED;
+    public static final ForgeConfigSpec.IntValue BUFF_KISS_THRESHOLD;
+    public static final ForgeConfigSpec.IntValue BUFF_KISS_WINDOW;
+    public static final ForgeConfigSpec.IntValue BUFF_DURATION;
+    public static final ForgeConfigSpec.IntValue BUFF_AMPLIFIER_LEVEL_0;
+    public static final ForgeConfigSpec.IntValue BUFF_AMPLIFIER_LEVEL_1;
+    public static final ForgeConfigSpec.IntValue BUFF_AMPLIFIER_LEVEL_2;
+    public static final ForgeConfigSpec.IntValue BUFF_AMPLIFIER_LEVEL_3;
 
     // Particles
-    public static final ModConfigSpec.IntValue PARTICLE_COUNT_MIN;
-    public static final ModConfigSpec.IntValue PARTICLE_COUNT_EXTRA;
+    public static final ForgeConfigSpec.IntValue PARTICLE_COUNT_MIN;
+    public static final ForgeConfigSpec.IntValue PARTICLE_COUNT_EXTRA;
 
     // FOV zoom
-    public static final ModConfigSpec.BooleanValue FOV_ZOOM_ENABLED;
-    public static final ModConfigSpec.IntValue FOV_ZOOM_IN_TICKS;
-    public static final ModConfigSpec.IntValue FOV_HOLD_TICKS;
-    public static final ModConfigSpec.IntValue FOV_ZOOM_OUT_TICKS;
-    public static final ModConfigSpec.DoubleValue FOV_ZOOM_STRENGTH;
+    public static final ForgeConfigSpec.BooleanValue FOV_ZOOM_ENABLED;
+    public static final ForgeConfigSpec.IntValue FOV_ZOOM_IN_TICKS;
+    public static final ForgeConfigSpec.IntValue FOV_HOLD_TICKS;
+    public static final ForgeConfigSpec.IntValue FOV_ZOOM_OUT_TICKS;
+    public static final ForgeConfigSpec.DoubleValue FOV_ZOOM_STRENGTH;
 
     static {
-        ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
+        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
 
         builder.comment("Kiss cooldown settings (in ticks, 20 ticks = 1 second)",
                         "Cooldown decreases as the maid's favorability level increases")

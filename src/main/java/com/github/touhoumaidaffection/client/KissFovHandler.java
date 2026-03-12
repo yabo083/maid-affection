@@ -6,13 +6,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.ComputeFovModifierEvent;
-import net.neoforged.neoforge.client.event.ViewportEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ComputeFovModifierEvent;
+import net.minecraftforge.client.event.ViewportEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
-@EventBusSubscriber(modid = TouhouMaidAffection.MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = TouhouMaidAffection.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class KissFovHandler {
 
     private static long zoomStartTime = -1;
@@ -65,7 +65,9 @@ public class KissFovHandler {
      * Returns -1 if animation is not active.
      */
     private static float getAnimFactor() {
-        if (zoomStartTime < 0) return -1f;
+        if (zoomStartTime < 0) {
+            return -1f;
+        }
 
         long elapsed = System.currentTimeMillis() - zoomStartTime;
         float inMs = zoomInTicks * 50f;
@@ -90,7 +92,9 @@ public class KissFovHandler {
     @SubscribeEvent
     public static void onComputeFovModifier(ComputeFovModifierEvent event) {
         float factor = getAnimFactor();
-        if (factor < 0) return;
+        if (factor < 0) {
+            return;
+        }
 
         float modifier = 1.0f - zoomStrength * factor;
         event.setNewFovModifier(event.getNewFovModifier() * modifier);
@@ -99,7 +103,9 @@ public class KissFovHandler {
     @SubscribeEvent
     public static void onCameraAngles(ViewportEvent.ComputeCameraAngles event) {
         float factor = getAnimFactor();
-        if (factor < 0 || targetMaidId < 0) return;
+        if (factor < 0 || targetMaidId < 0) {
+            return;
+        }
 
         // Smoothly interpolate camera angles toward the maid's face
         float lerpedYaw = Mth.rotLerp(factor, startYaw, targetYaw);

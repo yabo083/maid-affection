@@ -3,6 +3,7 @@ package com.github.touhoumaidaffection.handler;
 import com.github.touhoumaidaffection.ModConfig;
 import com.github.touhoumaidaffection.ModEffects;
 import com.github.touhoumaidaffection.ModSounds;
+import com.github.touhoumaidaffection.TouhouMaidAffection;
 import com.github.touhoumaidaffection.network.KissMaidPayload;
 import com.github.tartaricacid.touhoulittlemaid.api.event.InteractMaidEvent;
 import com.github.tartaricacid.touhoulittlemaid.entity.favorability.Type;
@@ -10,11 +11,15 @@ import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.network.PacketDistributor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class KissMaidHandler {
 
@@ -97,7 +102,7 @@ public class KissMaidHandler {
 
         // Broadcast particle packet to all tracking clients
         KissMaidPayload payload = new KissMaidPayload(maid.getId(), player.getId());
-        PacketDistributor.sendToPlayersTrackingEntityAndSelf(maid, payload);
+        TouhouMaidAffection.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> maid), payload);
 
         // Buff system: track kiss timestamps and check threshold
         if (ModConfig.BUFF_ENABLED.get()) {
@@ -134,9 +139,9 @@ public class KissMaidHandler {
 
             // Apply Maid's Prayer (custom effect with built-in regeneration) to both
             player.addEffect(new MobEffectInstance(
-                    ModEffects.MAIDS_PRAYER.getDelegate(), duration, amplifier, false, true, true));
+                    ModEffects.MAIDS_PRAYER.get(), duration, amplifier, false, true, true));
             maid.addEffect(new MobEffectInstance(
-                    ModEffects.MAIDS_PRAYER.getDelegate(), duration, amplifier, false, true, true));
+                    ModEffects.MAIDS_PRAYER.get(), duration, amplifier, false, true, true));
         }
     }
 }

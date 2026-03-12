@@ -13,8 +13,8 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Minecraft-1.21.1-green?style=flat-square" alt="MC 1.21.1"/>
-  <img src="https://img.shields.io/badge/NeoForge-21.1.x-orange?style=flat-square" alt="NeoForge"/>
+  <img src="https://img.shields.io/badge/Minecraft-1.20.1-green?style=flat-square" alt="MC 1.21.1"/>
+  <img src="https://img.shields.io/badge/Forge-47\.4\.x-orange?style=flat-square" alt="NeoForge"/>
   <img src="https://img.shields.io/badge/Requires-Touhou_Little_Maid_1.5.0+-blue?style=flat-square" alt="TLM"/>
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT"/>
 </p>
@@ -76,7 +76,7 @@ All values are tunable in `config/touhou_maid_affection-common.toml`:
 
 ## 📥 Installation
 
-1. Install **Minecraft 1.21.1** + **NeoForge 21.1.x**
+1. Install **Minecraft 1.20.1** + **Forge 47.4.x**
 2. Install **[Touhou Little Maid](https://modrinth.com/mod/touhou-little-maid)** 1.5.0+
 3. Drop `touhou-maid-affection-x.x.x.jar` into your `.minecraft/mods/` folder
 4. Launch the game!

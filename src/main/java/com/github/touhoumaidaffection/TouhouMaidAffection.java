@@ -1,14 +1,15 @@
 package com.github.touhoumaidaffection;
 
-import com.github.touhoumaidaffection.client.KissClientHandler;
-import com.github.touhoumaidaffection.handler.KissMaidHandler;
 import com.github.touhoumaidaffection.network.KissMaidPayload;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,31 +18,28 @@ public class TouhouMaidAffection {
     public static final String MOD_ID = "touhou_maid_affection";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-    public TouhouMaidAffection(IEventBus modEventBus, ModContainer modContainer) {
-        // Register config
-        modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.COMMON, ModConfig.SPEC);
+    private static final String PROTOCOL_VERSION = "1";
 
-        // Register sound events
+    public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
+            new ResourceLocation(MOD_ID, "main"),
+            () -> PROTOCOL_VERSION,
+            s -> PROTOCOL_VERSION.equals(s) || NetworkRegistry.ABSENT.equals(s) || NetworkRegistry.ACCEPTVANILLA.equals(s),
+            s -> PROTOCOL_VERSION.equals(s) || NetworkRegistry.ABSENT.equals(s) || NetworkRegistry.ACCEPTVANILLA.equals(s)
+    );
+
+    public TouhouMaidAffection() {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, com.github.touhoumaidaffection.ModConfig.SPEC);
+
         ModSounds.SOUNDS.register(modEventBus);
-
-        // Register mob effects
         ModEffects.MOB_EFFECTS.register(modEventBus);
 
-        // Register network packets on mod bus
-        modEventBus.addListener(this::registerPayloads);
+        int id = 0;
+        CHANNEL.registerMessage(id++, KissMaidPayload.class, KissMaidPayload::encode, KissMaidPayload::decode, KissMaidPayload::handle);
 
-        // Register game event handlers on NeoForge bus
-        NeoForge.EVENT_BUS.register(KissMaidHandler.class);
+        MinecraftForge.EVENT_BUS.register(com.github.touhoumaidaffection.handler.KissMaidHandler.class);
 
         LOGGER.info("Touhou Maid: Affection loaded! Now you can kiss your maid~");
-    }
-
-    private void registerPayloads(final RegisterPayloadHandlersEvent event) {
-        final PayloadRegistrar registrar = event.registrar("1.0.0").optional();
-        registrar.playToClient(
-                KissMaidPayload.TYPE,
-                KissMaidPayload.STREAM_CODEC,
-                KissClientHandler::handle
-        );
     }
 }
