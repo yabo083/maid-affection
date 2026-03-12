@@ -27,17 +27,19 @@ public class KissFovHandler {
     private static float startPitch;
     private static float targetYaw;
     private static float targetPitch;
+    private static boolean carriedKiss;
 
     /**
      * Trigger a zero-distance FOV zoom + camera snap to maid's face.
      */
-    public static void trigger(int maidEntityId) {
+    public static void trigger(int maidEntityId, boolean isCarriedKiss) {
         zoomStartTime = System.currentTimeMillis();
         zoomInTicks = ModConfig.FOV_ZOOM_IN_TICKS.get();
         holdTicks = ModConfig.FOV_HOLD_TICKS.get();
         zoomOutTicks = ModConfig.FOV_ZOOM_OUT_TICKS.get();
         zoomStrength = ModConfig.FOV_ZOOM_STRENGTH.get().floatValue();
         targetMaidId = maidEntityId;
+        carriedKiss = isCarriedKiss;
 
         // Capture current camera angles and calculate target
         Minecraft mc = Minecraft.getInstance();
@@ -48,8 +50,8 @@ public class KissFovHandler {
             Entity maid = mc.level.getEntity(maidEntityId);
             if (maid != null) {
                 Vec3 eyePos = mc.player.getEyePosition();
-                Vec3 maidEye = maid.getEyePosition();
-                Vec3 diff = maidEye.subtract(eyePos);
+                Vec3 targetPos = getTargetPositionForMode(mc, maid);
+                Vec3 diff = targetPos.subtract(eyePos);
                 double dist = diff.horizontalDistance();
                 targetYaw = (float) (Mth.atan2(diff.z, diff.x) * Mth.RAD_TO_DEG) - 90.0F;
                 targetPitch = (float) -(Mth.atan2(diff.y, dist) * Mth.RAD_TO_DEG);
@@ -77,6 +79,7 @@ public class KissFovHandler {
         if (elapsed > inMs + holdMs + outMs) {
             zoomStartTime = -1;
             targetMaidId = -1;
+            carriedKiss = false;
             return -1f;
         }
 
@@ -118,5 +121,24 @@ public class KissFovHandler {
     private static float smoothstep(float t) {
         t = Math.max(0f, Math.min(1f, t));
         return t * t * (3f - 2f * t);
+    }
+
+    private static Vec3 getTargetPositionForMode(Minecraft mc, Entity maid) {
+        Vec3 maidEye = maid.getEyePosition();
+        if (!carriedKiss || mc.player == null) {
+            return maidEye;
+        }
+
+        Vec3 forward = Vec3.directionFromRotation(0.0F, mc.player.getYRot()).normalize();
+        Vec3 right = new Vec3(-forward.z, 0.0, forward.x);
+
+        double sideOffset = ModConfig.CARRIED_SIDE_OFFSET.get();
+        double forwardOffset = ModConfig.CARRIED_FORWARD_OFFSET.get();
+        double verticalOffset = ModConfig.CARRIED_VERTICAL_OFFSET.get();
+
+        return maidEye
+                .add(right.scale(sideOffset))
+                .add(forward.scale(forwardOffset))
+                .add(0.0, verticalOffset, 0.0);
     }
 }

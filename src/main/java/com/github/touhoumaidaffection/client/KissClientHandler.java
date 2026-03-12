@@ -23,7 +23,7 @@ public class KissClientHandler {
 
         // Trigger FOV zoom if this is the local player
         if (player == Minecraft.getInstance().player && ModConfig.FOV_ZOOM_ENABLED.get()) {
-            KissFovHandler.trigger(maid.getId());
+            KissFovHandler.trigger(maid.getId(), payload.carriedKiss());
         }
 
         // Calculate midpoint between player mouth and maid face

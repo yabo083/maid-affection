@@ -35,6 +35,9 @@ public class ModConfig {
     public static final ForgeConfigSpec.IntValue FOV_HOLD_TICKS;
     public static final ForgeConfigSpec.IntValue FOV_ZOOM_OUT_TICKS;
     public static final ForgeConfigSpec.DoubleValue FOV_ZOOM_STRENGTH;
+    public static final ForgeConfigSpec.DoubleValue CARRIED_SIDE_OFFSET;
+    public static final ForgeConfigSpec.DoubleValue CARRIED_FORWARD_OFFSET;
+    public static final ForgeConfigSpec.DoubleValue CARRIED_VERTICAL_OFFSET;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -154,6 +157,18 @@ public class ModConfig {
         FOV_ZOOM_STRENGTH = builder
                 .comment("Zoom strength (0.0 = no zoom, 1.0 = full zoom to 0 FOV) (default: 0.85)")
                 .defineInRange("strength", 0.85, 0.0, 0.95);
+
+        CARRIED_SIDE_OFFSET = builder
+                .comment("Carried kiss camera side offset (left/right) for maid head targeting (default: 0.48)")
+                .defineInRange("carriedSideOffset", 0.48, -2.0, 2.0);
+
+        CARRIED_FORWARD_OFFSET = builder
+                .comment("Carried kiss camera forward/back offset for maid head targeting (default: 0.16)")
+                .defineInRange("carriedForwardOffset", 0.16, -2.0, 2.0);
+
+        CARRIED_VERTICAL_OFFSET = builder
+                .comment("Carried kiss camera vertical offset for maid head targeting (default: -0.10)")
+                .defineInRange("carriedVerticalOffset", -0.10, -2.0, 2.0);
 
         builder.pop();
 

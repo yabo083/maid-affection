@@ -1,6 +1,7 @@
 package com.github.touhoumaidaffection;
 
 import com.github.touhoumaidaffection.network.KissMaidPayload;
+import com.github.touhoumaidaffection.network.KissCarryRequestMessage;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -36,6 +37,7 @@ public class TouhouMaidAffection {
         ModEffects.MOB_EFFECTS.register(modEventBus);
 
         int id = 0;
+        CHANNEL.registerMessage(id++, KissCarryRequestMessage.class, KissCarryRequestMessage::encode, KissCarryRequestMessage::decode, KissCarryRequestMessage::handle);
         CHANNEL.registerMessage(id++, KissMaidPayload.class, KissMaidPayload::encode, KissMaidPayload::decode, KissMaidPayload::handle);
 
         MinecraftForge.EVENT_BUS.register(com.github.touhoumaidaffection.handler.KissMaidHandler.class);

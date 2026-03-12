@@ -10,6 +10,7 @@ import com.github.tartaricacid.touhoulittlemaid.entity.favorability.Type;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
@@ -66,6 +67,30 @@ public class KissMaidHandler {
             return;
         }
 
+        // Cancel to prevent opening the maid GUI
+        event.setCanceled(true);
+
+        executeKiss(player, maid);
+    }
+
+    public static void tryKissCarriedMaid(Player player) {
+        if (player == null || player.level().isClientSide) {
+            return;
+        }
+
+        for (Entity passenger : player.getPassengers()) {
+            if (passenger instanceof EntityMaid maid) {
+                executeKiss(player, maid, true);
+                return;
+            }
+        }
+    }
+
+    public static void executeKiss(Player player, EntityMaid maid) {
+        executeKiss(player, maid, false);
+    }
+
+    private static void executeKiss(Player player, EntityMaid maid, boolean carriedKiss) {
         // Tiered cooldown check based on maid's favorability level
         long currentTick = player.level().getGameTime();
         int favLevel = maid.getFavorabilityManager().getLevel();
@@ -73,12 +98,8 @@ public class KissMaidHandler {
 
         Long lastKiss = COOLDOWNS.get(player.getUUID());
         if (cooldown > 0 && lastKiss != null && (currentTick - lastKiss) < cooldown) {
-            event.setCanceled(true);
             return;
         }
-
-        // Cancel to prevent opening the maid GUI
-        event.setCanceled(true);
 
         // Record cooldown
         COOLDOWNS.put(player.getUUID(), currentTick);
@@ -101,7 +122,7 @@ public class KissMaidHandler {
                 1.0F, 1.0F);
 
         // Broadcast particle packet to all tracking clients
-        KissMaidPayload payload = new KissMaidPayload(maid.getId(), player.getId());
+        KissMaidPayload payload = new KissMaidPayload(maid.getId(), player.getId(), carriedKiss);
         TouhouMaidAffection.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> maid), payload);
 
         // Buff system: track kiss timestamps and check threshold
