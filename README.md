@@ -28,6 +28,7 @@
 | Feature | Description |
 |---|---|
 | 💋 **Kiss Interaction** | Sneak + empty hand + right-click your maid to kiss her |
+| ⌨️ **Carried-Maid Kiss Key** | When carrying a maid (princess carry), press `V` (rebindable in Controls) to kiss |
 | 💕 **Heart Particles** | Romantic heart particles spawn between you and your maid |
 | 🔊 **Kiss Sound Effects** | Plays crisp kissing sounds (7 random variants) |
 | 📈 **Favorability Boost** | Each kiss grants **+3 favorability** (30s cooldown) |
@@ -72,6 +73,7 @@ All values are tunable in `config/touhou_maid_affection-common.toml`:
 - Favorability points and cooldown
 - Maid's Prayer thresholds, duration, regen amplifiers
 - FOV zoom strength and timing
+- Carried-kiss camera offsets (`carriedSideOffset`, `carriedForwardOffset`, `carriedVerticalOffset`)
 - Particle counts
 
 ## 📥 Installation
@@ -95,7 +97,7 @@ Output jar at `build/libs/touhou-maid-affection-x.x.x.jar`.
 
 - **Mod ID**: `touhou_maid_affection`
 - **API**: Uses TouhouLittleMaid's `InteractMaidEvent` event API
-- **Networking**: Custom `KissMaidPayload` packet (Server → Client) for particle sync
+- **Networking**: `KissCarryRequestMessage` (Client → Server) + `KissMaidPayload` (Server → Client)
 - **Compatibility**: Soft-detects CarryOn via `ModList.isLoaded()`, zero hard dependencies
 - **Favorability**: Uses TLM's built-in `FavorabilityManager` + custom `Type("Kiss", 3, 600)`
 - **Client Effects**: FOV zoom via `ComputeFovModifierEvent` + camera angles via `ViewportEvent.ComputeCameraAngles`

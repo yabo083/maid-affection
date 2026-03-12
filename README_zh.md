@@ -14,7 +14,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Minecraft-1.20.1-green?style=flat-square" alt="MC 1.20.1"/>
-  <img src="https://img.shields.io/badge/NeoForge-21.1.x-orange?style=flat-square" alt="NeoForge"/>
+  <img src="https://img.shields.io/badge/Forge-47\.4\.x-orange?style=flat-square" alt="Forge"/>
   <img src="https://img.shields.io/badge/Requires-Touhou_Little_Maid_1.5.0+-blue?style=flat-square" alt="TLM"/>
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT"/>
 </p>
@@ -28,6 +28,7 @@
 | 特性 | 描述 |
 |---|---|
 | 💋 **亲吻互动** | 潜行 + 空手右击你的女仆，触发亲吻 |
+| ⌨️ **公主抱亲吻按键** | 公主抱状态下可按 `V` 触发亲吻（可在控制菜单改键） |
 | 💕 **爱心粒子** | 亲吻时在两人之间生成浪漫的爱心粒子效果 |
 | 🔊 **亲吻音效** | 播放清脆的亲吻音效（7 个随机变体） |
 | 📈 **好感度提升** | 每次亲吻为女仆增加 **+3 好感度**（30 秒冷却） |
@@ -72,6 +73,7 @@
 - 好感度增加量和冷却
 - 少女祈祷的触发阈值、持续时间、恢复倍率
 - FOV 缩放强度和动画时长
+- 公主抱镜头偏移（`carriedSideOffset`、`carriedForwardOffset`、`carriedVerticalOffset`）
 - 粒子数量
 
 ## 📥 安装
@@ -95,7 +97,7 @@ cd maid-affection
 
 - **Mod ID**: `touhou_maid_affection`
 - **API**: 使用 TouhouLittleMaid 提供的 `InteractMaidEvent` 事件 API
-- **网络**: 自定义 `KissMaidPayload` 包（Server → Client）用于同步粒子效果
+- **网络**: `KissCarryRequestMessage`（Client → Server）+ `KissMaidPayload`（Server → Client）
 - **兼容性**: 通过 `ModList.isLoaded()` 软检测 CarryOn，零硬依赖
 - **好感度**: 使用 TLM 内置的 `FavorabilityManager` + 自定义 `Type("Kiss", 3, 600)`
 - **客户端效果**: FOV 缩放通过 `ComputeFovModifierEvent` + 镜头角度通过 `ViewportEvent.ComputeCameraAngles` 实现
