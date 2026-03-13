@@ -75,3 +75,29 @@ jobs:
           ./gradlew modrinth
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+
+      - name: Resolve Forge release jar
+        id: forge_jar
+        if: contains(github.ref_name, 'forge1.20.1')
+        run: |
+          JAR_PATH="$(find build/libs -maxdepth 1 -type f -name 'touhou-maid-affection-*.jar' ! -name '*-sources.jar' | head -n 1)"
+          if [ -z "$JAR_PATH" ]; then
+            echo "No Forge release jar found."
+            exit 1
+          fi
+          echo "path=$JAR_PATH" >> "$GITHUB_OUTPUT"
+
+      - name: Publish to CurseForge
+        if: contains(github.ref_name, 'forge1.20.1') && secrets.CURSEFORGE_TOKEN != '' && vars.CURSEFORGE_PROJECT_ID != ''
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          files: ${{ steps.forge_jar.outputs.path }}
+          curseforge-id: ${{ vars.CURSEFORGE_PROJECT_ID }}
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          loaders: forge
+          game-versions: 1.20.1
+          version: ${{ github.ref_name }}
+          version-type: release
+          changelog: |
+            Automated release from GitHub tag `${{ github.ref_name }}`.
+            Commit: `${{ github.sha }}`
