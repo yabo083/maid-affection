@@ -75,3 +75,27 @@ jobs:
           ./gradlew modrinth
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+
+      - name: Resolve release jar
+        id: release_jar
+        shell: bash
+        run: |
+          JAR_PATH=$(ls build/libs/touhou-maid-affection-*.jar | grep -v '\-sources\.jar' | head -n 1)
+          if [ -z "$JAR_PATH" ]; then
+            echo "No release jar found in build/libs"
+            exit 1
+          fi
+          echo "jar_path=$JAR_PATH" >> "$GITHUB_OUTPUT"
+          echo "Resolved jar: $JAR_PATH"
+
+      - name: Publish to CurseForge
+        if: env.CURSEFORGE_TOKEN != '' && vars.CURSEFORGE_PROJECT_ID != ''
+        uses: itsmeow/curseforge-upload@v3
+        with:
+          token: ${{ secrets.CURSEFORGE_TOKEN }}
+          project_id: ${{ vars.CURSEFORGE_PROJECT_ID }}
+          game_endpoint: minecraft
+          file_path: ${{ steps.release_jar.outputs.jar_path }}
+          game_versions: "Minecraft 1.21:1.21.1,Java 21,NeoForge"
+        env:
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
